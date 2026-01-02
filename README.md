@@ -1,94 +1,133 @@
-# 10x Astro Starter
+# Natigo
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+> AI-powered flashcard creation and spaced-repetition learning.
 
-## Tech Stack
+Natigo is a web application for automatically generating flashcards. Paste any text (1 000 – 10 000 characters), let large-language-models propose candidate cards, quickly review and edit them, then save the accepted ones to your private collection backed by spaced-repetition scheduling.
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+---
 
-## Prerequisites
+## Table of Contents
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+1. [Tech stack](#tech-stack)
+2. [Getting started locally](#getting-started-locally)
+3. [Available scripts](#available-scripts)
+4. [Project scope](#project-scope)
+5. [Project status](#project-status)
+6. [License](#license)
 
-## Getting Started
+---
 
-1. Clone the repository:
+## Tech stack
+
+• **Frontend**  
+- [Astro 5](https://astro.build/) – static-first framework  
+- [React 19](https://react.dev/) – interactive islands/components  
+- [TypeScript 5](https://www.typescriptlang.org/) – static typing  
+- [Tailwind CSS 4](https://tailwindcss.com/) – utility-first styling  
+- [shadcn/ui](https://ui.shadcn.com/) – accessible React components
+
+• **Backend**  
+- [Supabase](https://supabase.com/) – PostgreSQL, authentication & edge functions  
+- Row-Level-Security enforced for per-user data privacy
+
+• **AI Integration**  
+- [OpenRouter.ai](https://openrouter.ai/) – access to OpenAI, Anthropic, Google & other models
+
+• **Tooling**  
+- ESLint + Prettier with `lint-staged`  
+- Husky Git hooks  
+- GitHub Actions for CI / CD  
+- Docker & DigitalOcean for hosting
+
+---
+
+## Getting started locally
+
+### Prerequisites
+
+* Node.js `24.11.1` (see `.nvmrc`)
+
 
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
+# 1. Clone the repository
+$ git clone https://github.com/grabskak/natigo.git
+$ cd natigo
+
+# 2. Install dependencies
+$ npm install   # or pnpm install
+
+# 3. Configure environment variables
+$ cp .env.example .env
+# 👉  Fill in SUPABASE_URL, SUPABASE_ANON_KEY, OPENROUTER_API_KEY …
+
+# 4. Start the dev server
+$ npm run dev
+# open http://localhost:4321
 ```
 
-2. Install dependencies:
-
-```bash
-npm install
-```
-
-3. Run the development server:
-
-```bash
-npm run dev
-```
-
-4. Build for production:
+To build a production bundle run:
 
 ```bash
 npm run build
 ```
 
-## Available Scripts
+---
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+## Available scripts
 
-## Project Structure
+The following npm scripts are defined in `package.json`:
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Astro in dev mode with hot-reload |
+| `npm run build` | Build a static production bundle |
+| `npm run preview` | Preview the production build locally |
+| `npm run astro` | Run arbitrary Astro CLI commands |
+| `npm run lint` | Run ESLint over the entire project |
+| `npm run lint:fix` | ESLint with automatic fixes |
+| `npm run format` | Run Prettier formatting |
 
-## AI Development Support
+---
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+## Project scope
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+MVP delivers the following key capabilities:
 
-### Cursor IDE
+* Private user accounts (email + password) powered by Supabase Auth.
+* Manual CRUD for flashcards (front / back fields).
+* AI generation of candidate flashcards from pasted text (1 k – 10 k chars).
+* Review workflow – accept, edit, or reject each candidate before bulk save.
+* Integration with a ready-made spaced-repetition algorithm for study sessions.
+* Basic product analytics stored in database logs (no external analytics).
 
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
+Out of scope for MVP:
 
-### GitHub Copilot
+* Mobile applications.
+* Advanced custom SRS algorithms.
+* Import/export in formats other than raw text.
+* Sharing decks between users.
+* Integrations with external learning platforms.
 
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
+For full functional and non-functional requirements see [`./.ai/prod.md`](./.ai/prod.md).
 
-### Windsurf
+---
 
-The `.windsurfrules` file contains AI configuration for Windsurf.
+## Project status
 
-## Contributing
+| Version | Stage | Build | Coverage |
+|---------|-------|-------|----------|
+| `0.0.1` | 🛠️ Active development (MVP) | ![CI](https://github.com/grabskak/natigo/actions/workflows/ci.yml/badge.svg) | — |
 
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+Roadmap:
+
+1. Finish authentication flow & RLS.
+2. Implement AI generation screen & reviewer UI.
+3. Integrate SRS queue & study session.
+4. Deploy preview to DigitalOcean.
+
+---
 
 ## License
 
-MIT
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
