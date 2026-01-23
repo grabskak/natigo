@@ -34,7 +34,7 @@ export class AITimeoutError extends Error {
 export class AIServiceError extends Error {
   constructor(
     message: string,
-    public originalError?: unknown
+    public details?: unknown
   ) {
     super(message);
     this.name = "AIServiceError";

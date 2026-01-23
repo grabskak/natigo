@@ -345,42 +345,6 @@ INSERT INTO generation_error_logs (
 ) VALUES ($1, $2, $3, $4)
 ```
 
-### External Service Interactions
-
-**OpenRouter.ai API:**
-- **Endpoint:** `https://openrouter.ai/api/v1/chat/completions`
-- **Method:** POST
-- **Authentication:** `Authorization: Bearer {OPENROUTER_API_KEY}`
-- **Timeout:** 60 seconds
-- **Request Format:**
-```json
-{
-  "model": "anthropic/claude-3-haiku",
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a flashcard generator. Generate flashcards from the provided text..."
-    },
-    {
-      "role": "user",
-      "content": "{input_text}"
-    }
-  ],
-  "response_format": { "type": "json_object" }
-}
-```
-- **Expected Response:**
-```json
-{
-  "choices": [
-    {
-      "message": {
-        "content": "{\"flashcards\": [{\"front\": \"...\", \"back\": \"...\"}, ...]}"
-      }
-    }
-  ]
-}
-```
 
 ## 6. Security Considerations
 

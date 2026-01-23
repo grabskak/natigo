@@ -70,7 +70,7 @@ Centralny punkt dostępu do głównych funkcji aplikacji oraz szybki podgląd os
 
 - **QuickActionCard (React)**
   - 3 karty:
-    1. "Generate New Flashcards" → /generate (ikona Sparkles, primary color)
+    1. "Generate New Flashcards" → /generations (ikona Sparkles, primary color)
     2. "My Flashcards" → /flashcards (ikona Library, counter z liczbą fiszek)
     3. "Start Review" → ukryty w MVP (SRS deferred)
   - Każda karta: ikona, tytuł, krótki opis, clickable
@@ -87,13 +87,13 @@ Centralny punkt dostępu do głównych funkcji aplikacji oraz szybki podgląd os
 
 
 **Edge cases:**
-- Brak historii generowania: empty state z CTA do /generate
+- Brak historii generowania: empty state z CTA do /generations
 - Błąd fetchu recent activity: komunikat + "Try Again"
 - Zero fiszek w bazie: counter pokazuje "0 flashcards"
 
 ---
 
-### 2.3 Generate Screen (`/generate`)
+### 2.3 Generate Screen (`/generations`)
 
 **Główny cel:**  
 Umożliwienie użytkownikowi wklejenia tekstu (1000-10000 znaków) i uruchomienia generowania fiszek przez AI oraz ich rewizję (zaakceptuj ,edytuj lub odrzuć)
@@ -134,7 +134,7 @@ Umożliwienie użytkownikowi wklejenia tekstu (1000-10000 znaków) i uruchomieni
 
 ---
 
-### 2.4 Review Candidates Screen (`/generate/review/:generation_id`)
+### 2.4 Review Candidates Screen (`/generations/review/:generation_id`)
 
 **Główny cel:**  
 Umożliwienie użytkownikowi szybkiej recenzji kandydatów fiszek zwróconych przez AI (zaakceptuj/edytuj/odrzuć) oraz zbiorczego zapisu zaakceptowanych fiszek do bazy.
@@ -195,10 +195,10 @@ Umożliwienie użytkownikowi szybkiej recenzji kandydatów fiszek zwróconych pr
 - Disabled save button gdy brak zaakceptowanych
 
 **Edge cases:**
-- Page refresh podczas recenzji: utrata stanu, redirect /generate z komunikatem "Session lost. Please generate again."
+- Page refresh podczas recenzji: utrata stanu, redirect /generations z komunikatem "Session lost. Please generate again."
 - Exit bez zapisu: kandydaci lost, user musi regenerować (confirmation dialog opcjonalne)
 - Wszystkie kandydaty odrzucone: disabled save button + informacja "No flashcards to save"
-- AI zwrócił 0 kandydatów: redirect /generate z komunikatem "No flashcards generated. Try different text."
+- AI zwrócił 0 kandydatów: redirect /generations z komunikatem "No flashcards generated. Try different text."
 - Bulk save failed: inline error + "Try Again" (state persists w komponencie)
 - Invalid edit (empty field): disabled accept button + inline validation
 - Próba zapisu dwa razy (idempotencja): błąd 400 "Already saved" + redirect /flashcards
@@ -344,7 +344,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
   - Logo: "natigo" (font-bold, clickable)
   - Navigation links:
     - Dashboard → /dashboard
-    - Generate → /generate
+    - Generate → /generations
     - My Flashcards → /flashcards
     - NO "Review" link w MVP (SRS deferred)
   - Active state: underline + bold dla current page
@@ -379,11 +379,11 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
    ↓ (register/login)
 [/dashboard]
    ↓ (click "Generate New Flashcards")
-[/generate]
+[/generations]
    ↓ (paste text, validate, click "Generate")
 [Loading state] (30s max)
    ↓ (success)
-[/generate/review/:id]
+[/generations/review/:id]
    ↓ (review: accept/edit/reject każdego kandydata)
    ↓ (click "Save X flashcards")
 [API: POST /api/generations/:id/save]
@@ -402,7 +402,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 **Punkty bólu i rozwiązania:**
 - **Ból:** AI może zwrócić słabe kandydaty → **Rozwiązanie:** inline editing, reject action, jasne status badges
 - **Ból:** Długi czas generowania → **Rozwiązanie:** loading state z komunikatem + progress indicator
-- **Ból:** Przypadkowe odświeżenie strony → **Rozwiązanie:** komunikat "Session lost" + redirect /generate (no sessionStorage backup w MVP)
+- **Ból:** Przypadkowe odświeżenie strony → **Rozwiązanie:** komunikat "Session lost" + redirect /generations (no sessionStorage backup w MVP)
 - **Ból:** Brak pewności czy zapisało się → **Rozwiązanie:** toast success + redirect do listy fiszek
 
 ---
@@ -508,13 +508,13 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 
 ---
 
-### 4.3 URL Structure i parametry
+### 4.3 URL Structura i parametry
 
 **Routes:**
 - `/login` - Auth screen
 - `/dashboard` - Dashboard
-- `/generate` - Generate screen
-- `/generate/review/:generation_id` - Review candidates (dynamic)
+- `/generations` - Generate screen
+- `/generations/review/:generation_id` - Review candidates (dynamic)
 - `/flashcards` - My Flashcards list
 - `/settings` - Settings
 
@@ -573,7 +573,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 
 #### GenerateForm
 - **Typ:** React (client:load)
-- **Użycie:** /generate
+- **Użycie:** /generations
 - **State:** inputText, isLoading, error
 - **Validation:** 1000-10000 chars
 - **API Call:** POST /api/generations
@@ -591,7 +591,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 
 #### CandidatesList
 - **Typ:** React (client:load)
-- **Użycie:** /generate/review/:id
+- **Użycie:** /generations/review/:id
 - **State:** candidates, decisions Map, editedContent Map, isLoading, error, isSaving
 - **API Calls:** GET /api/generations/:id, POST /api/generations/:id/save
 - **Children:** CandidateCard (repeated), ReviewStatsBar, ReviewBottomBar

@@ -300,5 +300,162 @@ export interface ListErrorLogsQuery {
 export type PaginatedErrorLogsResponse = PaginatedResponse<ErrorLogDto>;
 
 // ============================================================================
+// Generate View Types (ViewModel)
+// ============================================================================
+
+/**
+ * State of the main Generate Screen container
+ */
+export type GenerateScreenState = 
+  | { status: 'form' }
+  | { status: 'loading' }
+  | { status: 'error', error: ApiError }
+  | { status: 'review', data: GenerationResult };
+
+/**
+ * Result from generation API with all candidates
+ */
+export interface GenerationResult {
+  generationId: string;
+  candidates: FlashcardCandidateDto[];
+  metadata: GenerationMetadata;
+}
+
+/**
+ * Decision state for each candidate
+ */
+export type CandidateDecisionState = 'pending' | 'accepted' | 'edited' | 'rejected';
+
+/**
+ * User decision for a single candidate
+ */
+export interface CandidateDecision {
+  candidateIndex: number;
+  state: CandidateDecisionState;
+  editedContent?: { front: string; back: string };
+}
+
+/**
+ * Statistics about decisions made on candidates
+ */
+export interface DecisionStats {
+  total: number;
+  pending: number;
+  accepted: number;
+  edited: number;
+  rejected: number;
+}
+
+/**
+ * Validation state for form fields
+ */
+export interface ValidationState {
+  isValid: boolean;
+  message: string | null;
+}
+
+// ============================================================================
+// Flashcards View Types (ViewModel)
+// ============================================================================
+
+/**
+ * Typ stanu głównego widoku Flashcards
+ */
+export interface FlashcardsViewState {
+  flashcards: FlashcardDto[];
+  isLoading: boolean;
+  error: ApiError | null;
+  pagination: PaginationState;
+  filters: FlashcardsFilters;
+  modal: FlashcardModalState;
+  deleteDialog: DeleteDialogState;
+}
+
+/**
+ * Stan paginacji w widoku
+ */
+export interface PaginationState {
+  currentPage: number;
+  totalPages: number;
+  total: number;
+  limit: number;
+}
+
+/**
+ * Filtry dla listy fiszek
+ */
+export interface FlashcardsFilters {
+  source: 'all' | FlashcardSource;
+  sort: 'created_at' | 'updated_at';
+  order: 'asc' | 'desc';
+}
+
+/**
+ * Stan modala fiszki (add/edit)
+ */
+export interface FlashcardModalState {
+  isOpen: boolean;
+  mode: 'add' | 'edit';
+  flashcard: FlashcardDto | null;
+  formData: FlashcardFormData;
+  validation: {
+    front: ValidationState;
+    back: ValidationState;
+  };
+  isSubmitting: boolean;
+  error: ApiError | null;
+}
+
+/**
+ * Dane formularza fiszki
+ */
+export interface FlashcardFormData {
+  front: string;
+  back: string;
+}
+
+/**
+ * Stan dialogu usuwania fiszki
+ */
+export interface DeleteDialogState {
+  isOpen: boolean;
+  flashcardId: string | null;
+  isDeleting: boolean;
+  error: ApiError | null;
+}
+
+/**
+ * Wariant pustego stanu
+ */
+export type EmptyStateVariant = 'total-empty' | 'filtered-empty';
+
+/**
+ * Rozszerzona PaginationMeta z total_pages
+ */
+export interface PaginationMetaExtended extends PaginationMeta {
+  total_pages: number;
+}
+
+// ============================================================================
 // Type Guards
 // ============================================================================
+
+// ============================================================================
+// OpenRouter Service Types
+// ============================================================================
+
+/**
+ * Re-export OpenRouter types for use throughout the application
+ */
+export type {
+  OpenRouterConfig,
+  CompletionOptions,
+  CompletionResult,
+  ChatMessage,
+  ResponseFormat,
+  ModelInfo,
+  FlashcardGenerationOptions,
+  AIFlashcard,
+  TokenUsage,
+  JsonSchema,
+} from './lib/types/openrouter.types';

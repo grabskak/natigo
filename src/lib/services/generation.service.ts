@@ -157,23 +157,39 @@ export async function logGenerationError(
  * const candidates = validateFlashcardCandidates(aiFlashcards);
  */
 export function validateFlashcardCandidates(aiFlashcards: AIFlashcard[]): FlashcardCandidateDto[] {
-  return aiFlashcards
-    .map((card) => ({
-      front: card.front.trim(),
-      back: card.back.trim(),
-      source: "ai-full" as const,
-    }))
-    .filter((card) => {
+  console.info(`🔍 Walidacja ${aiFlashcards.length} fiszek w generation.service...`);
+
+  const candidates = aiFlashcards
+    .map((card, index) => {
+      const candidate = {
+        front: card.front.trim(),
+        back: card.back.trim(),
+        source: "ai-full" as const,
+      };
+
+      // Log każdej fiszki przed filtracją
+      console.info(`   Fiszka ${index}: front=${candidate.front.length} znaków, back=${candidate.back.length} znaków`);
+
+      return candidate;
+    })
+    .filter((card, index) => {
       // Validate front length (1-200 characters)
       if (card.front.length < 1 || card.front.length > 200) {
+        console.warn(`   ❌ Fiszka ${index} odrzucona: front length ${card.front.length} (wymagane: 1-200)`);
         return false;
       }
       // Validate back length (1-500 characters)
       if (card.back.length < 1 || card.back.length > 500) {
+        console.warn(`   ❌ Fiszka ${index} odrzucona: back length ${card.back.length} (wymagane: 1-500)`);
         return false;
       }
+      console.info(`   ✅ Fiszka ${index} zaakceptowana`);
       return true;
     });
+
+  console.info(`✅ Walidacja zakończona: ${candidates.length}/${aiFlashcards.length} fiszek przeszło walidację`);
+
+  return candidates;
 }
 
 /**
@@ -209,15 +225,21 @@ export async function processGeneration(
     const inputTextLength = inputText.length;
     console.info("after inputTextLength");
     // Step 3: Call AI service to generate flashcards
+    console.info("📡 Wywołuję generateFlashcardsWithAI...");
     const aiFlashcards = await generateFlashcardsWithAI(inputText);
+    console.info(`✅ generateFlashcardsWithAI zwróciło ${aiFlashcards.length} fiszek`);
 
     // Calculate duration
     const durationMs = Date.now() - startTime;
 
     // Step 4: Validate and filter candidates
+    console.info("🔍 Rozpoczynam walidację kandydatów...");
     const candidates = validateFlashcardCandidates(aiFlashcards);
+    console.info(`✅ Po walidacji pozostało ${candidates.length} kandydatów`);
 
     if (candidates.length === 0) {
+      console.error("❌ BŁĄD: Żadna fiszka nie przeszła walidacji!");
+      console.error("Surowe fiszki od AI:", JSON.stringify(aiFlashcards, null, 2));
       throw new AIServiceError("No valid flashcards could be generated from the input");
     }
 

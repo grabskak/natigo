@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { CreateFlashcardsResponse, FlashcardDto, FlashcardInsert, ValidationErrorDetail } from "../../types";
-import type { CreateFlashcardInput } from "../schemas/flashcard.schema";
+import type { CreateFlashcardsResponse, FlashcardDto, FlashcardInsert, ValidationErrorDetail, PaginatedFlashcardsResponse } from "../../types";
+import type { CreateFlashcardInput, ListFlashcardsQueryInput } from "../schemas/flashcard.schema";
 import { ValidationError, ForbiddenError } from "../errors/flashcard.errors";
 
 /**
@@ -174,5 +174,68 @@ export async function processFlashcardCreation(
   return {
     created_count: createdFlashcards.length,
     flashcards: createdFlashcards,
+  };
+}
+
+/**
+ * Fetches paginated list of flashcards for a user with optional filtering and sorting
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - User ID to fetch flashcards for
+ * @param query - Query parameters for filtering, sorting, and pagination
+ * @returns Promise resolving to paginated flashcards response
+ * @throws {Error} When database query fails
+ *
+ * @example
+ * const response = await listFlashcards(supabase, userId, { page: 1, limit: 20, sort: 'created_at', order: 'desc' });
+ */
+export async function listFlashcards(
+  supabase: SupabaseClient,
+  userId: string,
+  query: ListFlashcardsQueryInput
+): Promise<PaginatedFlashcardsResponse> {
+  // Step 1: Build base query
+  let queryBuilder = supabase
+    .from("flashcards")
+    .select("id, generation_id, front, back, source, created_at, updated_at", { count: "exact" })
+    .eq("user_id", userId);
+
+  // Step 2: Apply optional filters
+  if (query.source) {
+    queryBuilder = queryBuilder.eq("source", query.source);
+  }
+
+  if (query.generation_id) {
+    queryBuilder = queryBuilder.eq("generation_id", query.generation_id);
+  }
+
+  // Step 3: Apply sorting
+  queryBuilder = queryBuilder.order(query.sort, { ascending: query.order === "asc" });
+
+  // Step 4: Apply pagination
+  const from = (query.page - 1) * query.limit;
+  const to = from + query.limit - 1;
+  queryBuilder = queryBuilder.range(from, to);
+
+  // Step 5: Execute query
+  const { data, error, count } = await queryBuilder;
+
+  if (error) {
+    console.error("Failed to fetch flashcards:", error);
+    throw new Error("Failed to fetch flashcards");
+  }
+
+  // Step 6: Build response
+  const total = count || 0;
+  const totalPages = Math.ceil(total / query.limit);
+
+  return {
+    data: data || [],
+    pagination: {
+      total,
+      page: query.page,
+      limit: query.limit,
+      total_pages: totalPages,
+    },
   };
 }

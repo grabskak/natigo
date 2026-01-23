@@ -1,4 +1,13 @@
 import { AIServiceError, AITimeoutError } from "../errors/generation.errors";
+import { getOpenRouterService, isOpenRouterAvailable } from "./openrouter.instance";
+import {
+  OpenRouterError,
+  OpenRouterTimeoutError,
+  OpenRouterAuthenticationError,
+  OpenRouterRateLimitError,
+  OpenRouterInsufficientCreditsError,
+  getUserFriendlyErrorMessage,
+} from "../errors/openrouter.errors";
 
 /**
  * Structure of a flashcard returned by AI service
@@ -6,24 +15,6 @@ import { AIServiceError, AITimeoutError } from "../errors/generation.errors";
 export interface AIFlashcard {
   front: string;
   back: string;
-}
-
-/**
- * OpenRouter API response structure
- */
-interface OpenRouterResponse {
-  choices: {
-    message: {
-      content: string;
-    };
-  }[];
-}
-
-/**
- * Expected structure of parsed AI response
- */
-interface AIResponseData {
-  flashcards: AIFlashcard[];
 }
 
 /**
@@ -40,9 +31,8 @@ interface AIResponseData {
  * console.log(flashcards); // [{ front: "Q1", back: "A1" }, ...]
  */
 export async function generateFlashcardsWithAI(inputText: string, timeoutMs = 60000): Promise<AIFlashcard[]> {
-  const MOCK_MODE = import.meta.env.OPENROUTER_API_KEY === "mock" || !import.meta.env.OPENROUTER_API_KEY;
-
-  if (MOCK_MODE) {
+  // Tryb mock - gdy brak klucza API lub ustawiony na "mock"
+  if (!isOpenRouterAvailable()) {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -59,122 +49,56 @@ export async function generateFlashcardsWithAI(inputText: string, timeoutMs = 60
     ];
   }
 
-  // Get API configuration from environment variables
-  const apiKey = import.meta.env.OPENROUTER_API_KEY;
-  const apiUrl = import.meta.env.OPENROUTER_API_URL || "https://openrouter.ai/api/v1/chat/completions";
-  const model = import.meta.env.OPENROUTER_MODEL || "anthropic/claude-3-haiku";
-
-  if (!apiKey) {
-    throw new AIServiceError("OpenRouter API key not configured");
-  }
-
-  // Create abort controller for timeout handling
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
+  // Use OpenRouter Service
   try {
-    // Format system prompt for flashcard generation
-    const systemPrompt = `You are a flashcard generator. Your task is to analyze the provided text and create high-quality flashcards for learning.
+    const openRouterService = getOpenRouterService();
 
-Rules:
-- Generate 8-15 flashcards from the text
-- Each flashcard should have a clear question (front) and answer (back)
-- Questions should be concise (1-200 characters)
-- Answers should be complete but concise (1-500 characters)
-- Focus on key concepts, definitions, facts, and relationships
-- Avoid overly simple or trivial questions
-- Return ONLY valid JSON in this exact format: {"flashcards": [{"front": "question", "back": "answer"}, ...]}`;
-
-    // Make API request to OpenRouter
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://natigo.app",
-        "X-Title": "Natigo Flashcard Generator",
-      },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt,
-          },
-          {
-            role: "user",
-            content: inputText,
-          },
-        ],
-        response_format: { type: "json_object" },
-      }),
-      signal: controller.signal,
+    console.info("🤖 Wywołuję openRouterService.generateFlashcards...");
+    // Call generateFlashcards method from our service
+    const flashcards = await openRouterService.generateFlashcards(inputText, {
+      model: import.meta.env.OPENROUTER_MODEL,
+      temperature: 0.3,
+      minFlashcards: 8,
+      maxFlashcards: 15,
+      timeout: timeoutMs,
     });
 
-    clearTimeout(timeoutId);
-
-    // Handle non-200 responses
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Unknown error");
-      throw new AIServiceError(`OpenRouter API returned status ${response.status}`, errorText);
-    }
-
-    // Parse response JSON
-    const data: OpenRouterResponse = await response.json();
-
-    // Validate response structure
-    if (!data.choices || data.choices.length === 0) {
-      throw new AIServiceError("Invalid API response: no choices returned");
-    }
-
-    const content = data.choices[0].message.content;
-    if (!content) {
-      throw new AIServiceError("Invalid API response: empty content");
-    }
-
-    // Parse the AI's JSON response
-    let parsedContent: AIResponseData;
-    try {
-      parsedContent = JSON.parse(content);
-    } catch (parseError) {
-      throw new AIServiceError("Failed to parse AI response as JSON", parseError);
-    }
-
-    // Validate flashcards array exists
-    if (!parsedContent.flashcards || !Array.isArray(parsedContent.flashcards)) {
-      throw new AIServiceError("Invalid AI response: flashcards array missing or invalid");
-    }
-
-    // Validate each flashcard has required fields
-    const validFlashcards = parsedContent.flashcards.filter((card) => {
-      return (
-        card &&
-        typeof card.front === "string" &&
-        typeof card.back === "string" &&
-        card.front.trim().length > 0 &&
-        card.back.trim().length > 0
-      );
-    });
-
-    if (validFlashcards.length === 0) {
-      throw new AIServiceError("No valid flashcards generated by AI");
-    }
-
-    return validFlashcards;
+    console.info(`✅ openRouterService zwróciło ${flashcards.length} fiszek`);
+    // OpenRouter service already returns properly formatted flashcards of type AIFlashcard
+    return flashcards;
   } catch (error) {
-    clearTimeout(timeoutId);
-
-    // Handle timeout specifically
-    if (error instanceof Error && error.name === "AbortError") {
+    console.error("❌ Błąd w generateFlashcardsWithAI:", error);
+    
+    // Map OpenRouter errors to existing AI errors for backward compatibility
+    if (error instanceof OpenRouterTimeoutError) {
       throw new AITimeoutError(`AI service did not respond within ${timeoutMs / 1000} seconds`);
     }
 
-    // Re-throw our custom errors
-    if (error instanceof AIServiceError || error instanceof AITimeoutError) {
-      throw error;
+    if (error instanceof OpenRouterAuthenticationError) {
+      console.error("   -> OpenRouterAuthenticationError:", error.message, error.details);
+      throw new AIServiceError("Authentication failed. Check your OpenRouter API key or account limits.", error.details);
     }
 
-    // Wrap unknown errors
+    if (error instanceof OpenRouterRateLimitError) {
+      console.error("   -> OpenRouterRateLimitError:", error.message);
+      const retryMessage = error.retryAfter ? ` Retry after ${error.retryAfter} seconds.` : " Please try again later.";
+      throw new AIServiceError(`Rate limit exceeded.${retryMessage}`, error.details);
+    }
+
+    if (error instanceof OpenRouterInsufficientCreditsError) {
+      console.error("   -> OpenRouterInsufficientCreditsError:", error.message);
+      throw new AIServiceError("Insufficient credits on OpenRouter account. Please add credits at https://openrouter.ai/settings/keys", error.details);
+    }
+
+    if (error instanceof OpenRouterError) {
+      console.error("   -> OpenRouterError (kod: " + error.code + "):", error.message, error.details);
+      // Use user-friendly message
+      const friendlyMessage = getUserFriendlyErrorMessage(error);
+      throw new AIServiceError(friendlyMessage, error.details);
+    }
+
+    // Other unknown errors
+    console.error("   -> Nieznany błąd:", error);
     throw new AIServiceError("Unexpected error calling AI service", error);
   }
 }

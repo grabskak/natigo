@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { GenerateFlashcardsSchema } from "../../../lib/schemas/generation.schema";
-//import { processGeneration } from "../../../lib/services/generation.service";
+import { processGeneration } from "../../../lib/services/generation.service";
 import type { ErrorResponse } from "../../../types";
 import { RateLimitError, AITimeoutError, AIServiceError } from "../../../lib/errors/generation.errors";
 
@@ -128,8 +128,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.log("🚀 Calling processGeneration...");
     // Step 6: Process generation (main business logic)
     // TEMPORARY: Mock response to test endpoint without Supabase
-    // const result = await processGeneration(supabase, user.id, validation.data.input_text);
-
+    const result = await processGeneration(supabase, user.id, validation.data.input_text);
+    /*
     const result = {
       generation_id: "550e8400-e29b-41d4-a716-446655440000",
       candidates: [
@@ -182,6 +182,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     };
 
     console.log("✅ Mock response created:", { id: result.generation_id, count: result.candidates.length });
+    */
     // Step 7: Return success response
     return new Response(JSON.stringify(result), {
       status: 201,
@@ -233,7 +234,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         JSON.stringify({
           error: {
             code: "AI_SERVICE_ERROR",
-            message: "Failed to generate flashcards due to AI service error",
+            message: error.message,
+            details: error.details as Record<string, unknown> | undefined,
           },
         } satisfies ErrorResponse),
         {

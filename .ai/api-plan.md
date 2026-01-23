@@ -67,8 +67,8 @@
   - Each flashcard's `back` field: 1-500 characters after trim, non-empty
   - If `source` is provided in request:
     - Must be one of: `manual`, `ai-full`, `ai-edited`
-    - If `source` is `ai-full` or `ai-edited` must be provided and valid
-    - If `source` is `manual`, `generation_id' must be null
+    - If `source` is `ai-full` or `ai-edited` generation_id must be provided and valid
+    - If `source` is `manual`, generation_id must be null
  
  
 
@@ -589,13 +589,13 @@ Leverage indexes defined in schema:
 
 **1. Direct Creation: `POST /api/flashcards`**
 - **Use Case:** Manual flashcard creation by user, bulk imports, or direct backend operations
-- **Flexibility:** Accepts single object or array
+- **Flexibility:** Accepts array
 - **Source Management:** 
   - Client should NOT send `source` field for manual creation
   - Backend sets `source = "manual"` by default
   - Only backend/system code should explicitly set `source` to `ai-full` or `ai-edited`
 - **Transaction:** Array requests are fully transactional (all or nothing)
-- **Response:** Returns single object or array based on input
+- **Response:** Returns array based on input
 
 **2. AI Workflow: `POST /api/generations/{generation_id}/save`**
 - **Use Case:** Saving reviewed AI-generated candidates
