@@ -33,6 +33,12 @@ Natigo is a web application for automatically generating flashcards. Paste any t
 • **AI Integration**  
 - [OpenRouter.ai](https://openrouter.ai/) – access to OpenAI, Anthropic, Google & other models
 
+• **Testing**  
+- [Vitest](https://vitest.dev/) – unit & integration testing framework  
+- [Playwright](https://playwright.dev/) – end-to-end testing  
+- [Testing Library](https://testing-library.com/) – component testing utilities  
+- [MSW](https://mswjs.io/) – API mocking for tests
+
 • **Tooling**  
 - ESLint + Prettier with `lint-staged`  
 - Husky Git hooks  
@@ -86,6 +92,8 @@ The following npm scripts are defined in `package.json`:
 | `npm run lint` | Run ESLint over the entire project |
 | `npm run lint:fix` | ESLint with automatic fixes |
 | `npm run format` | Run Prettier formatting |
+| `npm run test` | Run all unit tests with Vitest |
+| `npm run test:e2e` | Run end-to-end tests with Playwright |
 
 ---
 
