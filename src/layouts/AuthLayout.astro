@@ -1,0 +1,51 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+interface Props {
+  title: string;
+  description?: string;
+  heading: string;
+  subheading?: string;
+}
+
+const { title, description, heading, subheading } = Astro.props;
+---
+
+<Layout title={title} description={description} showHeader={false}>
+  <main class="min-h-screen bg-background">
+    <div class="container mx-auto flex min-h-screen items-center justify-center px-4 py-12">
+      <div class="w-full max-w-md">
+      <div class="mb-6 text-center">
+        <a
+          href="/"
+          class="inline-flex items-center justify-center text-2xl font-bold tracking-tight"
+        >
+          Natigo
+        </a>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">{heading}</CardTitle>
+          {subheading ? <CardDescription>{subheading}</CardDescription> : null}
+        </CardHeader>
+        <CardContent>
+          <slot />
+        </CardContent>
+      </Card>
+
+      <p class="mt-6 text-center text-xs text-muted-foreground">
+        Kontynuując, akceptujesz regulamin i politykę prywatności.
+      </p>
+      </div>
+    </div>
+  </main>
+</Layout>
+

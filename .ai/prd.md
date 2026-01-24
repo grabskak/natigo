@@ -145,7 +145,7 @@ US-002
   - Poprawne dane logowania umożliwiają dostęp do aplikacji.
   - Niepoprawne dane logowania zwracają czytelny komunikat błędu bez ujawniania, czy email istnieje.
   - Po zalogowaniu użytkownik widzi tylko własne dane.
-  - Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
+   - Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
 
 US-003
 - Tytuł: Wylogowanie

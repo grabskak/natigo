@@ -3,6 +3,7 @@ import { GenerateFlashcardsSchema } from "../../../lib/schemas/generation.schema
 import { processGeneration } from "../../../lib/services/generation.service";
 import type { ErrorResponse } from "../../../types";
 import { RateLimitError, AITimeoutError, AIServiceError } from "../../../lib/errors/generation.errors";
+import { errorResponse } from "../../../lib/utils/api-helpers";
 
 export const prerender = false;
 
@@ -18,21 +19,11 @@ export const prerender = false;
  */
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    console.log("🟢 Starting POST /api/generations");
-    // Step 1: Get Supabase client from locals (set by middleware)
     const supabase = locals.supabase;
-    console.log("✅ Supabase client:", !!supabase);
-    const user = {
-      id: "e3772e64-42ce-4cbf-b16c-89696e01a6e3", // np. "123e4567-e89b-12d3-a456-426614174000"
-    };
-    console.log("✅ User ID:", user.id);
-
-    console.log("🔧 ENV Check:", {
-      hasSupabaseUrl: !!import.meta.env.SUPABASE_URL,
-      supabaseUrl: import.meta.env.SUPABASE_URL?.substring(0, 30) + "...",
-      hasSupabaseKey: !!import.meta.env.SUPABASE_KEY,
-      supabaseKeyLength: import.meta.env.SUPABASE_KEY?.length,
-    });
+    const user = locals.user;
+    if (!user) {
+      return errorResponse(401, "AUTH_REQUIRED", "Authentication is required");
+    }
     /*
     // Step 2: Extract and validate Authorization header
     const authHeader = request.headers.get("Authorization");
@@ -77,7 +68,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     let body: unknown;
     try {
       body = await request.json();
-      console.log("✅ Body parsed:", { hasInputText: !!body && typeof body === "object" && "input_text" in body });
     } catch {
       return new Response(
         JSON.stringify({
@@ -125,7 +115,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
       );
     }
-    console.log("🚀 Calling processGeneration...");
     // Step 6: Process generation (main business logic)
     // TEMPORARY: Mock response to test endpoint without Supabase
     const result = await processGeneration(supabase, user.id, validation.data.input_text);
@@ -246,7 +235,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Generic server error (500)
-    console.error("Unexpected error in POST /api/generations:", error);
     return new Response(
       JSON.stringify({
         error: {

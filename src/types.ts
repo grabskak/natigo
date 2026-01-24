@@ -96,6 +96,21 @@ export interface ErrorResponse {
 }
 
 // ============================================================================
+// Auth DTOs
+// ============================================================================
+
+export interface AuthUserDto {
+  id: string;
+  email: string | null;
+}
+
+export interface AuthSessionDto {
+  access_token: string;
+  refresh_token?: string;
+  expires_at?: number;
+}
+
+// ============================================================================
 // Flashcard DTOs
 // ============================================================================
 

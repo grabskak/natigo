@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import type { ErrorResponse } from "../../../types";
 import { updateFlashcard, deleteFlashcard } from "../../../lib/services/flashcard.service";
-import { errorResponse, isValidUUID, getAuthenticatedUser } from "../../../lib/utils/api-helpers";
+import { errorResponse, isValidUUID } from "../../../lib/utils/api-helpers";
 
 export const prerender = false;
 
@@ -46,9 +46,10 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // Step 1: Get Supabase client from locals
     const supabase = locals.supabase;
 
-    // Step 2: Get authenticated user (temporary hardcoded)
-    const user = getAuthenticatedUser();
-    console.log("✅ PUT /api/flashcards/:id - User ID:", user.id);
+    const user = locals.user;
+    if (!user) {
+      return errorResponse(401, "AUTH_REQUIRED", "Authentication is required");
+    }
 
     // Step 3: Get flashcard ID from params
     const { id } = params;
@@ -152,9 +153,10 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     // Step 1: Get Supabase client from locals
     const supabase = locals.supabase;
 
-    // Step 2: Get authenticated user (temporary hardcoded)
-    const user = getAuthenticatedUser();
-    console.log("✅ DELETE /api/flashcards/:id - User ID:", user.id);
+    const user = locals.user;
+    if (!user) {
+      return errorResponse(401, "AUTH_REQUIRED", "Authentication is required");
+    }
 
     // Step 3: Get flashcard ID from params
     const { id } = params;

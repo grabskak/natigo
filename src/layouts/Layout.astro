@@ -1,29 +1,73 @@
 ---
 import "../styles/global.css";
 import { Toaster } from "../components/ui/sonner";
+import { ViewTransitions } from "astro:transitions";
+import type { AuthUserDto } from "@/types";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 interface Props {
   title?: string;
   description?: string;
+  showHeader?: boolean;
 }
 
 const { 
   title = "10x Astro Starter",
-  description = "A modern web application built with Astro"
+  description = "A modern web application built with Astro",
+  showHeader = true,
 } = Astro.props;
+
+const user = Astro.locals.user as AuthUserDto | undefined;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <ViewTransitions />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
   </head>
-  <body>
+  <body class="min-h-screen bg-background text-foreground">
+    {showHeader ? (
+      <header class="border-b">
+        <div class="container mx-auto flex h-14 items-center justify-between px-4">
+          <a href="/" class="text-base font-semibold tracking-tight">
+            Natigo
+          </a>
+
+          <nav class="flex items-center gap-2">
+            {user ? (
+              <>
+                <a href="/generations" class="text-sm text-muted-foreground hover:text-foreground">
+                  Generacje
+                </a>
+                <a href="/flashcards" class="text-sm text-muted-foreground hover:text-foreground">
+                  Fiszki
+                </a>
+                <span class="hidden max-w-[220px] truncate text-sm text-muted-foreground sm:inline">
+                  {user.email ?? "Zalogowano"}
+                </span>
+                <LogoutButton client:load redirectTo="/login" />
+              </>
+            ) : (
+              <>
+                <a href="/login" class="text-sm text-muted-foreground hover:text-foreground">
+                  Zaloguj
+                </a>
+                <a href="/register" class="text-sm text-muted-foreground hover:text-foreground">
+                  Załóż konto
+                </a>
+              </>
+            )}
+          </nav>
+        </div>
+      </header>
+    ) : null}
+
     <slot />
     <Toaster client:load />
   </body>
