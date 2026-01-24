@@ -8,14 +8,13 @@ natigo MVP to aplikacja webowa zorientowana na desktop, która umożliwia użytk
 
 ### Główne ścieżki użytkownika
 
-1. **Ścieżka AI (główna funkcjonalność):** Auth → Dashboard → Generate → Review Candidates → My Flashcards
-2. **Ścieżka manualna:** Auth → Dashboard → My Flashcards (+ modal dodawania) → My Flashcards
+1. **Ścieżka AI (główna funkcjonalność):** Auth → My Flashcards -> Generate → Review Candidates → My Flashcards
+2. **Ścieżka manualna:** Auth → My Flashcards (+ modal dodawania) → My Flashcards
 
 ### Odroczenia w MVP
 
 - **Review Sessions (SRS):** Pełna funkcjonalność powtórek odroczona
 - **Wyszukiwanie:** Brak search w My Flashcards
-- **Statystyki:** Dashboard bez zaawansowanych metryk
 - **Keyboard shortcuts:** Odroczone
 - **Rate limiting UI:** Podstawowy komunikat błędu
 - **SessionStorage backup:** Odświeżenie strony podczas recenzji = utrata stanu
@@ -43,7 +42,7 @@ Umożliwienie użytkownikowi zalogowania się lub założenia konta w celu uzysk
 **UX, dostępność i bezpieczeństwo:**
 - Centrowana karta na środku ekranu
 -Zabezpieczenia JWT
-- Automatyczne przekierowanie do /dashboard po sukcesie
+- Automatyczne przekierowanie do /flashcards po sukcesie
 
 **Edge cases:**
 - Email już istnieje: komunikat "This email is already registered"
@@ -52,46 +51,7 @@ Umożliwienie użytkownikowi zalogowania się lub założenia konta w celu uzysk
 
 ---
 
-### 2.2 Dashboard (`/dashboard`)
 
-**Główny cel:**  
-Centralny punkt dostępu do głównych funkcji aplikacji oraz szybki podgląd ostatniej aktywności.
-
-**Kluczowe informacje:**
-- Welcome message z emailem użytkownika i datą
-- 3 Quick Action Cards (grid-cols-3)
-- Link do pełnej historii
-
-**Kluczowe komponenty:**
-
-- **WelcomeHeader (React)**
-  - Wyświetla: "Welcome back, {email}" + data (format: "Sunday, January 18, 2026")
-  - Pobiera user z AuthContext
-
-- **QuickActionCard (React)**
-  - 3 karty:
-    1. "Generate New Flashcards" → /generations (ikona Sparkles, primary color)
-    2. "My Flashcards" → /flashcards (ikona Library, counter z liczbą fiszek)
-    3. "Start Review" → ukryty w MVP (SRS deferred)
-  - Każda karta: ikona, tytuł, krótki opis, clickable
-
-- **RecentActivityList (React, client:load)**
-  - Lista 5 ostatnich generacji (fetch GET /api/generations?limit=5)
-  - Każdy item: data/czas, metryki (Generated, Accepted, Rejected)
-  - Empty state: "No generations yet. Start by generating flashcards!"
-
-**UX, dostępność i bezpieczeństwo:**
-- Dashboard dostępny tylko dla zalogowanych (ProtectedRoute)
-- Jasna hierarchia wizualna (Welcome → Actions → Recent Activity)
-- Quick actions podkreślają główny case use (Generate)
-
-
-**Edge cases:**
-- Brak historii generowania: empty state z CTA do /generations
-- Błąd fetchu recent activity: komunikat + "Try Again"
-- Zero fiszek w bazie: counter pokazuje "0 flashcards"
-
----
 
 ### 2.3 Generate Screen (`/generations`)
 
@@ -208,19 +168,26 @@ Umożliwienie użytkownikowi szybkiej recenzji kandydatów fiszek zwróconych pr
 ### 2.5 My Flashcards Screen (`/flashcards`)
 
 **Główny cel:**  
-Centralne miejsce do przeglądania, edycji i usuwania zapisanych fiszek.
+Centralny punkt dostępu do głównych funkcji aplikacji a także centralne miejsce do przeglądania, edycji i usuwania zapisanych fiszek.
 
 **Kluczowe informacje:**
+-Welcome message z emailem użytkownika i datą
 - Przycisk "Add Manual Flashcard"
+- Przycisk "Generate New Flashcards" 
 - Grid layout (grid-cols-2) fiszek
 - Pagination (20 items per page)
 - Empty state z CTAs
 
 **Kluczowe komponenty:**
 
+- **WelcomeHeader (React)**
+  - Wyświetla: "Welcome back, {email}" + data (format: "Sunday, January 18, 2026")
+  - Pobiera user z AuthContext
+
 - **FlashcardsHeader (React)**
   - Tytuł "My Flashcards"
   - Przycisk "Add Manual Flashcard" (primary, otwiera modal)
+  - Przycisk "Generate New Flashcards" → /generations
 
 - **FlashcardsFilterBar (React)**
   - Source dropdown: All, Manual, AI-generated, AI-edited (mapuje do API: manual, ai-full, ai-edited)
@@ -334,8 +301,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 
 **Kluczowe informacje:**
 - Fixed top, full width, 64px height
-- Logo (left) clickable → /dashboard
-- Navigation links (center): Dashboard, Generate, My Flashcards
+- Navigation links (center): Generate, My Flashcards
 - User menu (right): avatar/initial + dropdown (email display, Settings, Logout)
 
 **Kluczowe komponenty:**
@@ -343,7 +309,6 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 - **NavigationBar (React, Shadcn Navigation Menu)**
   - Logo: "natigo" (font-bold, clickable)
   - Navigation links:
-    - Dashboard → /dashboard
     - Generate → /generations
     - My Flashcards → /flashcards
     - NO "Review" link w MVP (SRS deferred)
@@ -377,7 +342,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 ```
 [Landing] → [/login]
    ↓ (register/login)
-[/dashboard]
+[/flashcards]
    ↓ (click "Generate New Flashcards")
 [/generations]
    ↓ (paste text, validate, click "Generate")
@@ -410,8 +375,7 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 ### 3.2 Przepływ manualny
 
 ```
-[/dashboard]
-   ↓ (click "My Flashcards")
+
 [/flashcards]
    ↓ (click "Add Manual Flashcard")
 [FlashcardModal]
@@ -483,23 +447,22 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 **Layout:**
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ [Logo] Dashboard | Generate | My Flashcards│
+│  Generate | My Flashcards│
 └─────────────────────────────────────────────────────────────┘
 ```
 
 **Hierarchia:**
-- **Level 1 (Primary):** Dashboard, Generate, My Flashcards
+- **Level 1 (Primary):** Generate, My Flashcards
 - **Level 2 (Dropdown):** Settings, Logout (w user menu)
 
 **Navigation behavior:**
 - Active state: underline + bold dla current page
-- Logo clickable → /dashboard (convention)
 - User dropdown: hover/click → show menu
 - Keyboard: tab navigation, enter to activate, escape to close dropdown
 - Mobile: NO mobile menu w MVP (desktop-only)
 
 **Nawigacja hierarchiczna:**
-- Dashboard = hub (central point)
+- My Flashcards = hub (central point)
 - Generate → Review = parent-child relationship (breadcrumbs)
 - My Flashcards → Modals = overlay navigation (nie zmienia route)
 
@@ -512,7 +475,6 @@ Globalny punkt nawigacji między głównymi ekranami aplikacji.
 
 **Routes:**
 - `/login` - Auth screen
-- `/dashboard` - Dashboard
 - `/generations` - Generate screen
 - `/generations/review/:generation_id` - Review candidates (dynamic)
 - `/flashcards` - My Flashcards list

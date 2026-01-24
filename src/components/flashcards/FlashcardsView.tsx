@@ -73,7 +73,7 @@ export default function FlashcardsView({
   // ========================================================================
 
   const handleGenerateClick = () => {
-    window.location.href = '/generate';
+    window.location.href = '/generations';
   };
 
   const handleFilterChange = (newFilters: FlashcardsFilters) => {
@@ -87,7 +87,10 @@ export default function FlashcardsView({
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Header */}
-      <FlashcardsHeader onAddClick={openAddModal} />
+      <FlashcardsHeader 
+        onAddClick={openAddModal} 
+        onGenerateClick={handleGenerateClick}
+      />
 
       {/* Filter Bar */}
       <FlashcardsFilterBar filters={filters} onFilterChange={handleFilterChange} />
