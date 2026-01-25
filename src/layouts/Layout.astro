@@ -42,11 +42,8 @@ const user = Astro.locals.user as AuthUserDto | undefined;
           <nav class="flex items-center gap-2">
             {user ? (
               <>
-                <a href="/generations" class="text-sm text-muted-foreground hover:text-foreground">
-                  Generacje
-                </a>
                 <a href="/flashcards" class="text-sm text-muted-foreground hover:text-foreground">
-                  Fiszki
+                  Moje fiszki
                 </a>
                 <span class="hidden max-w-[220px] truncate text-sm text-muted-foreground sm:inline">
                   {user.email ?? "Zalogowano"}
