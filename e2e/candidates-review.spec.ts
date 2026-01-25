@@ -1,14 +1,15 @@
 /**
  * E2E Tests - Candidates Review Flow
  * Tests for reviewing, accepting, editing, and rejecting flashcard candidates
+ *
+ * NOTE: These tests use authenticated storage state from auth.setup.ts
  */
 
 import { test, expect } from "./fixtures";
 import { generateText } from "./helpers";
 
 test.describe("Review - Display & Navigation", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -61,8 +62,7 @@ test.describe("Review - Display & Navigation", () => {
 });
 
 test.describe("Review - Accept Candidates", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -135,8 +135,7 @@ test.describe("Review - Accept Candidates", () => {
 });
 
 test.describe("Review - Edit Candidates", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -261,8 +260,7 @@ test.describe("Review - Edit Candidates", () => {
 });
 
 test.describe("Review - Reject Candidates", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -320,8 +318,7 @@ test.describe("Review - Reject Candidates", () => {
 });
 
 test.describe("Review - Save Accepted Flashcards", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -404,8 +401,7 @@ test.describe("Review - Save Accepted Flashcards", () => {
 });
 
 test.describe("Review - Error Handling", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -451,8 +447,7 @@ test.describe("Review - Error Handling", () => {
 });
 
 test.describe("Review - Edge Cases", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });

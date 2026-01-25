@@ -1,18 +1,14 @@
 /**
  * Example E2E Test using Page Object Model
  * Demonstrates the complete critical path: Auth → Generate → Review → Save → CRUD
+ *
+ * NOTE: These tests use authenticated storage state from auth.setup.ts
  */
 
 import { test, expect } from "./fixtures";
 import { waitForToast, extractFlashcardId } from "./helpers";
 
 test.describe("Complete E2E Critical Path", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    // Login before each test
-    await authPage.login(testUser.email, testUser.password);
-    await expect(authPage.page).toHaveURL("/flashcards");
-  });
-
   test("Full flow: Generate → Review → Save → List → CRUD", async ({
     page,
     generatePage,
@@ -149,11 +145,6 @@ test.describe("Complete E2E Critical Path", () => {
 });
 
 test.describe("Generation Edge Cases", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-    await expect(authPage.page).toHaveURL("/flashcards");
-  });
-
   test("Validate minimum characters (1000)", async ({ generatePage }) => {
     await generatePage.goto();
 
@@ -190,9 +181,8 @@ test.describe("Generation Edge Cases", () => {
 });
 
 test.describe("Candidates Review Edge Cases", () => {
-  test.beforeEach(async ({ authPage, testUser, generatePage, longText }) => {
-    // Login and generate candidates
-    await authPage.login(testUser.email, testUser.password);
+  test.beforeEach(async ({ generatePage, longText }) => {
+    // Generate candidates first (already authenticated via storage state)
     await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();

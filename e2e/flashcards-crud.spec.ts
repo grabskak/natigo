@@ -1,15 +1,14 @@
 /**
  * E2E Tests - Flashcards CRUD Operations
  * Tests for creating, reading, updating, and deleting flashcards
+ *
+ * NOTE: These tests use authenticated storage state from auth.setup.ts
+ * No manual login required - all tests start with an authenticated session
  */
 
 import { test, expect } from "./fixtures";
 
 test.describe("Flashcards - List Display", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("displays flashcards list", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -72,10 +71,6 @@ test.describe("Flashcards - List Display", () => {
 });
 
 test.describe("Flashcards - Create (Add)", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("open add flashcard modal", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -197,10 +192,6 @@ test.describe("Flashcards - Create (Add)", () => {
 });
 
 test.describe("Flashcards - Update (Edit)", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("open edit modal for existing flashcard", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -330,10 +321,6 @@ test.describe("Flashcards - Update (Edit)", () => {
 });
 
 test.describe("Flashcards - Delete", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("open delete confirmation dialog", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -442,10 +429,6 @@ test.describe("Flashcards - Delete", () => {
 });
 
 test.describe("Flashcards - Navigation", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("navigate to generate page from header", async ({ flashcardsPage, generatePage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.goToGenerate();
@@ -455,7 +438,10 @@ test.describe("Flashcards - Navigation", () => {
     await expect(generatePage.form).toBeVisible();
   });
 
-  test("flashcards is default landing page after login", async ({ authPage, testUser, flashcardsPage }) => {
+  test("flashcards is default landing page after login", async ({ page, authPage, testUser, flashcardsPage }) => {
+    // Logout first to test fresh login
+    await page.context().clearCookies();
+
     // Fresh login
     await authPage.login(testUser.email, testUser.password);
 
@@ -463,7 +449,12 @@ test.describe("Flashcards - Navigation", () => {
     await expect(flashcardsPage.page).toHaveURL("/flashcards");
   });
 
-  test("return to flashcards from generation flow", async ({ flashcardsPage, generatePage, candidatesReviewPage, longText }) => {
+  test("return to flashcards from generation flow", async ({
+    flashcardsPage,
+    generatePage,
+    candidatesReviewPage,
+    longText,
+  }) => {
     await flashcardsPage.goto();
     await flashcardsPage.goToGenerate();
 
@@ -493,16 +484,12 @@ test.describe("Flashcards - Navigation", () => {
 });
 
 test.describe("Flashcards - Source Filter", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("filter by AI generated source", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
 
     // Apply AI filter
-    await flashcardsPage.filterBySource("AI");
+    await flashcardsPage.filterBySource("ai-full");
 
     // Wait for results
     await flashcardsPage.waitForReady();
@@ -516,7 +503,7 @@ test.describe("Flashcards - Source Filter", () => {
     await flashcardsPage.waitForReady();
 
     // Apply manual filter
-    await flashcardsPage.filterBySource("MANUAL");
+    await flashcardsPage.filterBySource("manual");
 
     // Wait for results
     await flashcardsPage.waitForReady();
@@ -528,13 +515,11 @@ test.describe("Flashcards - Source Filter", () => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
 
-    const initialCount = await flashcardsPage.getFlashcardCount();
-
     // Apply filter then remove it
-    await flashcardsPage.filterBySource("AI");
+    await flashcardsPage.filterBySource("ai-full");
     await flashcardsPage.waitForReady();
 
-    await flashcardsPage.filterBySource("ALL");
+    await flashcardsPage.filterBySource("all");
     await flashcardsPage.waitForReady();
 
     // Count might be same or different, just checking it works

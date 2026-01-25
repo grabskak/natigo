@@ -4,6 +4,9 @@ import { AuthPage, GeneratePage, CandidatesReviewPage, FlashcardsPage } from "./
 /**
  * Test fixtures for E2E tests
  * Provides pre-configured page objects and test data
+ *
+ * NOTE: Tests automatically use authenticated storage state from auth.setup.ts
+ * No manual login is required in individual tests!
  */
 
 interface Fixtures {
@@ -17,9 +20,10 @@ interface Fixtures {
 
 /**
  * Extended test with fixtures
+ * All tests using this fixture automatically have authenticated session
  */
 export const test = base.extend<Fixtures>({
-  // Auth page fixture
+  // Auth page fixture (kept for tests that explicitly test auth flows)
   authPage: async ({ page }, use) => {
     const authPage = new AuthPage(page);
     await use(authPage);
@@ -43,7 +47,7 @@ export const test = base.extend<Fixtures>({
     await use(flashcardsPage);
   },
 
-  // Test user fixture
+  // Test user fixture (kept for reference, but login is done once in setup)
   testUser: async ({}, use) => {
     const testUser = {
       email: process.env.E2E_USERNAME || "test@gmail.com",

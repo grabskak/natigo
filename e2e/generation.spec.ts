@@ -1,16 +1,14 @@
 /**
  * E2E Tests - Generation Flow
  * Tests for flashcard generation form and validation
+ *
+ * NOTE: These tests use authenticated storage state from auth.setup.ts
  */
 
 import { test, expect } from "./fixtures";
 import { generateText, waitForNetworkIdle } from "./helpers";
 
 test.describe("Generation - Happy Path", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("generate flashcards with valid text", async ({ generatePage, longText }) => {
     await generatePage.goto();
 
@@ -81,10 +79,6 @@ test.describe("Generation - Happy Path", () => {
 });
 
 test.describe("Generation - Validation", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("minimum 1000 characters required", async ({ generatePage }) => {
     await generatePage.goto();
 
@@ -180,10 +174,6 @@ test.describe("Generation - Validation", () => {
 });
 
 test.describe("Generation - Loading State", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("shows loading state during generation", async ({ generatePage, longText }) => {
     await generatePage.goto();
 
@@ -222,10 +212,6 @@ test.describe("Generation - Loading State", () => {
 });
 
 test.describe("Generation - Error Handling", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test.skip("handles rate limit error (429)", async ({ generatePage, longText, page }) => {
     await generatePage.goto();
 
@@ -288,10 +274,6 @@ test.describe("Generation - Error Handling", () => {
 });
 
 test.describe("Generation - Navigation", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("can navigate to generations from flashcards", async ({ flashcardsPage, generatePage }) => {
     await flashcardsPage.goto();
 

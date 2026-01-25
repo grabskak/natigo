@@ -131,6 +131,124 @@ export class FlashcardsPage {
   }
 
   /**
+   * Wait for the page to be ready (alias for waitForFlashcards for backwards compatibility)
+   */
+  async waitForReady() {
+    await this.waitForFlashcards();
+  }
+
+  /**
+   * Get all flashcard IDs from the page
+   */
+  async getAllFlashcardIds(): Promise<string[]> {
+    const cards = await this.getAllFlashcardCards().all();
+    const ids: string[] = [];
+    
+    for (const card of cards) {
+      const testId = await card.getAttribute("data-testid");
+      if (testId) {
+        // Extract ID from "flashcard-card-{id}"
+        const match = testId.match(/^flashcard-card-(.+)$/);
+        if (match) {
+          ids.push(match[1]);
+        }
+      }
+    }
+    
+    return ids;
+  }
+
+  /**
+   * Get menu button for a specific flashcard
+   */
+  getMenuButton(flashcardId: string) {
+    return this.getFlashcardCard(flashcardId).menuButton;
+  }
+
+  /**
+   * Open edit modal for a specific flashcard
+   */
+  async openEditModal(flashcardId: string) {
+    const card = this.getFlashcardCard(flashcardId);
+    await card.clickEdit();
+  }
+
+  /**
+   * Edit a flashcard
+   */
+  async editFlashcard(flashcardId: string, front: string, back: string) {
+    await this.openEditModal(flashcardId);
+    await this.modal.fill(front, back);
+    await this.modal.submit();
+  }
+
+  /**
+   * Open delete dialog for a specific flashcard
+   */
+  async openDeleteDialog(flashcardId: string) {
+    const card = this.getFlashcardCard(flashcardId);
+    await card.clickDelete();
+  }
+
+  /**
+   * Delete a flashcard
+   */
+  async deleteFlashcard(flashcardId: string) {
+    await this.openDeleteDialog(flashcardId);
+    await this.deleteDialog.confirm();
+  }
+
+  // Convenience accessors for modal properties (for backwards compatibility)
+  get modalFrontInput() {
+    return this.modal.frontInput;
+  }
+
+  get modalBackInput() {
+    return this.modal.backTextarea;
+  }
+
+  get modalError() {
+    return this.modal.error;
+  }
+
+  get modalSubmitButton() {
+    return this.modal.submitButton;
+  }
+
+  get modalCancelButton() {
+    return this.modal.cancelButton;
+  }
+
+  get deleteConfirmButton() {
+    return this.deleteDialog.confirmButton;
+  }
+
+  get deleteCancelButton() {
+    return this.deleteDialog.cancelButton;
+  }
+
+  /**
+   * Submit modal (convenience method)
+   */
+  async submitModal() {
+    await this.modal.submit();
+  }
+
+  /**
+   * Cancel modal (convenience method)
+   */
+  async cancelModal() {
+    await this.modal.cancel();
+  }
+
+  /**
+   * Get header element
+   */
+  get header() {
+    return this.page.locator("header, h1");
+  }
+
+  /**
    * Helper: Get source label in Polish
    */
   private getSourceLabel(source: string): string {

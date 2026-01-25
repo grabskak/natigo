@@ -43,9 +43,20 @@ export default defineConfig({
 
   /* Configure projects for Chromium only as per guidelines */
   projects: [
+    // Setup project - runs once to authenticate and save storage state
+    {
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
+    },
+    // Test project - uses authenticated storage state
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: { 
+        ...devices["Desktop Chrome"],
+        // Use signed-in state for all tests
+        storageState: ".auth/user.json",
+      },
+      dependencies: ["setup"],
     },
   ],
 

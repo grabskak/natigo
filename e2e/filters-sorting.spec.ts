@@ -1,15 +1,13 @@
 /**
  * E2E Tests - Filters, Sorting & Pagination
  * Tests for flashcard list filtering, sorting, and pagination
+ *
+ * NOTE: These tests use authenticated storage state from auth.setup.ts
  */
 
 import { test, expect } from "./fixtures";
 
 test.describe("Flashcards - Sorting", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("sort by newest first (default)", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -112,10 +110,6 @@ test.describe("Flashcards - Sorting", () => {
 });
 
 test.describe("Flashcards - Pagination", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test.skip("displays pagination when flashcards exceed page size", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -196,10 +190,6 @@ test.describe("Flashcards - Pagination", () => {
 });
 
 test.describe("Flashcards - Combined Filters", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("apply source + sort + order", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -280,10 +270,6 @@ test.describe("Flashcards - Combined Filters", () => {
 });
 
 test.describe("Flashcards - Filter Edge Cases", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test("empty result when filter matches nothing", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
@@ -348,10 +334,6 @@ test.describe("Flashcards - Filter Edge Cases", () => {
 });
 
 test.describe("Flashcards - Search (if implemented)", () => {
-  test.beforeEach(async ({ authPage, testUser }) => {
-    await authPage.login(testUser.email, testUser.password);
-  });
-
   test.skip("search flashcards by front text", async ({ flashcardsPage }) => {
     await flashcardsPage.goto();
     await flashcardsPage.waitForReady();
