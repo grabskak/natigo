@@ -41,19 +41,19 @@ export default function FlashcardCard({
       case 'manual':
         return {
           variant: 'secondary' as const,
-          label: 'Manual',
+          label: 'Ręczne',
           className: '',
         };
       case 'ai-full':
         return {
           variant: 'default' as const,
-          label: 'AI Generated',
+          label: 'Wygenerowane przez AI',
           className: '',
         };
       case 'ai-edited':
         return {
           variant: 'outline' as const,
-          label: 'AI Edited',
+          label: 'Edytowane AI',
           className: 'border-orange-500 text-orange-700',
         };
       default:
@@ -84,13 +84,13 @@ export default function FlashcardCard({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => onEdit(flashcard)}>
-              Edit
+              Edytuj
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onDelete(flashcard.id)}
               className="text-destructive focus:text-destructive"
             >
-              Delete
+              Usuń
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -98,21 +98,21 @@ export default function FlashcardCard({
 
       {/* Front Content */}
       <div className="mb-3">
-        <p className="text-sm text-muted-foreground mb-1">Front:</p>
+        <p className="text-sm text-muted-foreground mb-1">Przód:</p>
         <p className="font-medium break-words">{flashcard.front}</p>
       </div>
 
       {/* Back Content */}
       <div className="mb-3">
-        <p className="text-sm text-muted-foreground mb-1">Back:</p>
+        <p className="text-sm text-muted-foreground mb-1">Tył:</p>
         <p className="break-words">{flashcard.back}</p>
       </div>
 
       {/* Dates */}
       <div className="mt-3 text-xs text-muted-foreground flex justify-between">
-        <span>Created: {formatDate(flashcard.created_at)}</span>
+        <span>Utworzono: {formatDate(flashcard.created_at)}</span>
         {flashcard.updated_at !== flashcard.created_at && (
-          <span>Updated: {formatDate(flashcard.updated_at)}</span>
+          <span>Zaktualizowano: {formatDate(flashcard.updated_at)}</span>
         )}
       </div>
     </Card>

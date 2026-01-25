@@ -103,7 +103,7 @@ export default function FlashcardsView({
             onClick={() => window.location.reload()}
             className="text-sm text-destructive underline mt-2"
           >
-            Try Again
+            Spróbuj ponownie
           </button>
         </div>
       )}

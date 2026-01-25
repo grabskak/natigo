@@ -106,7 +106,7 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
   }, [confirmPassword, email, mode, password]);
 
   const redirectAfterSuccess = useCallback(() => {
-    window.location.href = safeNext ?? "/generations";
+    window.location.href = safeNext ?? "/flashcards";
   }, [safeNext]);
 
   const handleSubmit = useCallback(

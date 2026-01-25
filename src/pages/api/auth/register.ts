@@ -41,7 +41,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let emailRedirectTo: string;
   try {
     const callbackUrl = new URL("/auth/callback", import.meta.env.SITE_URL);
-    callbackUrl.searchParams.set("next", next ?? "/generations");
+    callbackUrl.searchParams.set("next", next ?? "/flashcards");
     emailRedirectTo = callbackUrl.toString();
   } catch {
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "SITE_URL is not configured correctly");

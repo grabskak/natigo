@@ -80,9 +80,9 @@ export const onRequest = defineMiddleware(async (context: APIContext, next) => {
     locals.user = { id: effectiveUser.id, email: effectiveUser.email };
   }
 
-  // If already logged in, keep login/register inaccessible (always redirect to /generations).
+  // If already logged in, keep login/register inaccessible (always redirect to /flashcards).
   if (effectiveUser && (url.pathname === "/login" || url.pathname === "/register")) {
-    return redirect("/generations");
+    return redirect("/flashcards");
   }
 
   // Protect all API routes except /api/auth/*

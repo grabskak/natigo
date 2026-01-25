@@ -12,13 +12,13 @@ interface FlashcardsHeaderProps {
 export default function FlashcardsHeader({ onAddClick, onGenerateClick }: FlashcardsHeaderProps) {
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-3xl font-bold">My Flashcards</h1>
+      <h1 className="text-3xl font-bold">Moje fiszki</h1>
       <div className="flex gap-3">
         <Button variant="outline" onClick={onGenerateClick}>
-          Generate New Flashcards
+          Generuj nowe fiszki
         </Button>
         <Button variant="default" onClick={onAddClick}>
-          Add Manual Flashcard
+          Dodaj fiszkę ręcznie
         </Button>
       </div>
     </div>

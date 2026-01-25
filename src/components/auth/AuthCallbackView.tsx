@@ -18,7 +18,7 @@ function getSafeNext(next?: string): string | undefined {
 
 export function AuthCallbackView({ next }: AuthCallbackViewProps) {
   const safeNext = useMemo(() => getSafeNext(next), [next]);
-  const destination = safeNext ?? "/generations";
+  const destination = safeNext ?? "/flashcards";
 
   const [secondsLeft, setSecondsLeft] = useState(2);
 

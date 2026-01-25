@@ -77,7 +77,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
         className="gap-1"
       >
         <ChevronLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Previous</span>
+        <span className="hidden sm:inline">Poprzednia</span>
       </Button>
 
       {/* Page Numbers */}
@@ -120,7 +120,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
         disabled={currentPage === totalPages}
         className="gap-1"
       >
-        <span className="hidden sm:inline">Next</span>
+        <span className="hidden sm:inline">Następna</span>
         <ChevronRight className="h-4 w-4" />
       </Button>
     </nav>

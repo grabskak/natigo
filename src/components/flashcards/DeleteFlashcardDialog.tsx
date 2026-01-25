@@ -34,21 +34,21 @@ export default function DeleteFlashcardDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Flashcard</AlertDialogTitle>
+          <AlertDialogTitle>Usuń fiszkę</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this flashcard? This action cannot
-            be undone and the flashcard will be permanently removed from your
-            collection.
+            Czy na pewno chcesz usunąć tę fiszkę? Ta operacja nie może
+            być cofnięta i fiszka zostanie trwale usunięta z Twojej
+            kolekcji.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Anuluj</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? 'Usuwanie...' : 'Usuń'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

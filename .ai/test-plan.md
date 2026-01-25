@@ -129,7 +129,9 @@ Framework: Playwright (podzbiór E2E).
 Zakres: szybkie testy krytycznych funkcji (login, generowanie, lista fiszek) po każdym deploy.
 Środowisko: staging + production (nieinwazyjne, bez masowego generowania AI).
 Częstotliwość: na każdy merge do main, przed release do production.
+
 4. Scenariusze testowe dla kluczowych funkcjonalności
+
 4.1. Middleware / autoryzacja routingu (SSR)
 Ochrona stron
 wejście na /generations bez sesji → redirect do /login?next=....
@@ -144,6 +146,7 @@ sesja istnieje, ale email_confirmed_at/confirmed_at puste → middleware wylogow
 brak pętli przekierowań (szczególnie /login i /register).
 Public assets
 request do /_astro/*, .css, .js, .map, obrazki → nie wywołuje logiki auth/redirect.
+
 4.2. Auth API (Supabase Auth)
 POST /api/auth/register
 poprawne dane → 200 oraz { requiresEmailConfirmation: true/false }.
@@ -166,6 +169,7 @@ hasło < 8 / mismatch → 400 VALIDATION_FAILED.
 POST /api/auth/logout
 poprawne wylogowanie → 204.
 błąd supabase signOut → 500 INTERNAL_SERVER_ERROR.
+
 4.3. Generowanie fiszek (AI) – API + services
 POST /api/generations
 happy path: input 1000–10000 znaków → 201, zwraca generation_id, candidates[], metadata.
@@ -179,6 +183,7 @@ tworzy rekord generations z hash’em tekstu (bez zapisu surowego inputu).
 validateFlashcardCandidates filtruje kandydatów spoza limitów (front 1–200, back 1–500).
 jeśli po filtracji 0 kandydatów → błąd AI_SERVICE_ERROR + zapis do generation_error_logs.
 logowanie błędów zawsze ogranicza message do 1000 znaków.
+
 4.4. Zapis fiszek (review → save) – API + UI
 POST /api/flashcards (bulk)
 body nie jest tablicą → 400 VALIDATION_FAILED.
@@ -196,6 +201,7 @@ brak zaakceptowanych/edytowanych → lokalny błąd NO_FLASHCARDS i brak request
 accept/edit/reject wpływa na licznik i stan przycisku “Save”.
 cancel z potwierdzeniem → reset decyzji i powrót do formularza.
 po sukcesie: toast + przekierowanie na /flashcards?source=ai-full (sprawdzić, że filtr po wejściu jest ustawiony).
+
 4.5. Zarządzanie fiszkami (lista/filtry/paginacja/CRUD)
 GET /api/flashcards
 domyślne parametry (page=1, limit=20, sort=created_at, order=desc) → 200, poprawna pagination.total_pages.
@@ -220,6 +226,7 @@ paginacja: zmiana strony scroll do top.
 pusty stan: różny wariant “total-empty” vs “filtered-empty”.
 modal add/edit: walidacje UI (min/ max długości), obsługa błędów API.
 delete dialog: potwierdzenie, edge case “ostatnia fiszka na stronie” → cofnięcie page.
+
 4.6. Bezpieczeństwo i prywatność
 RLS: użytkownik A nie widzi/nie modyfikuje danych użytkownika B (flashcards/generations/error_logs).
 Open redirect: next nie pozwala na //, ://, \ i ścieżki bez /.
@@ -229,17 +236,21 @@ reset-password: zawsze 200 po walidacji wejścia (bez ujawniania istnienia konta
 Cookies
 w prod: secure=true, httpOnly=true, sameSite=lax.
 brak utrzymywania cookies dla niepotwierdzonych kont (po rejestracji i w middleware).
+
 4.7. A11y i UX
 formularze: poprawne label, aria-invalid, aria-describedby, komunikaty błędów z role="alert".
 dialogi/modale (shadcn/Radix): focus trap, zamykanie ESC, powrót focus.
 kontrast i dark mode podstawowo (Tailwind dark:).
 copy (PL/EN): spójność komunikatów w krytycznych flow (nie musi być w 100% PL, ale brak “mieszanych” błędów w jednym widoku tam, gdzie to mylące).
+
 5. Środowisko testowe
+
 Local dev
 Node.js zgodnie z repo (README wskazuje 24.11.1),
 npm install, npm run dev,
 Supabase local (CLI) + zastosowane migracje,
 zmienne .env: SUPABASE_URL, SUPABASE_KEY (server), SITE_URL, OPENROUTER_API_KEY, OPENROUTER_MODEL, OPENROUTER_API_URL.
+
 Staging
 osobny projekt Supabase (oddzielna baza i auth),
 klucze OpenRouter z limitami finansowymi,
@@ -250,6 +261,7 @@ Dane testowe
 min. 2 użytkowników testowych (A i B),
 seed fiszek: manual + ai-full + ai-edited, kilka generacji z różnymi czasami,
 testowe przypadki z granicznymi długościami front/back i input_text.
+
 6. Narzędzia do testowania
 
 6.1. Testy jednostkowe i integracyjne
@@ -494,7 +506,9 @@ Przed release do production:
 - Bug reports: wypełnione według szablonu (tytuł, środowisko, kroki, dowody, priorytet).
 - CI/CD: testy automatyczne na każdy PR + merge.
 - Regression: smoke tests na staging po każdym deploy.
+
 9. Role i odpowiedzialności w procesie testowania
+
 QA / Inżynier jakości
 przygotowanie planu i przypadków testowych,
 automatyzacja (unit/integration/e2e) + raportowanie,
@@ -507,7 +521,9 @@ akceptacja kryteriów biznesowych i priorytetów,
 decyzje dot. scope/regresji.
 DevOps
 wsparcie CI/CD, staging, sekrety, monitoring.
+
 10. Procedury raportowania błędów
+
 Kanał: GitHub Issues (lub Jira – jeśli używane w zespole).
 Szablon zgłoszenia
 Tytuł: krótko + moduł (np. [API][flashcards] 422 przy manual flashcard bez powodu),
