@@ -75,7 +75,7 @@ Podejście: Zod schemas jako single source of truth.
 3.6. Testy E2E (end-to-end)
 Framework: Playwright Test Runner.
 Zakres:
-- kluczowe ścieżki użytkownika: Auth → Generowanie → Review → Save → Lista fiszek → CRUD,
+- kluczowe ścieżki użytkownika: Auth → Lista fiszek -> Generowanie → Review → Save → Lista fiszek → CRUD,
 - krytyczne scenariusze: rejestracja, email confirmation, login, reset hasła, logout,
 - edge cases: ostatnia fiszka na stronie, filtry + paginacja, błędy API w UI,
 - cross-browser: smoke tests w Chromium, Firefox, WebKit.

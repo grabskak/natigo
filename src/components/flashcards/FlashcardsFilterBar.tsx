@@ -46,7 +46,7 @@ export default function FlashcardsFilterBar({
       {/* Source Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.source} onValueChange={handleSourceChange}>
-          <SelectTrigger>
+          <SelectTrigger data-testid="flashcards-source-filter">
             <SelectValue placeholder="Filtruj według źródła" />
           </SelectTrigger>
           <SelectContent>
@@ -61,7 +61,7 @@ export default function FlashcardsFilterBar({
       {/* Sort By Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.sort} onValueChange={handleSortChange}>
-          <SelectTrigger>
+          <SelectTrigger data-testid="flashcards-sort-filter">
             <SelectValue placeholder="Sortuj według" />
           </SelectTrigger>
           <SelectContent>
@@ -74,7 +74,7 @@ export default function FlashcardsFilterBar({
       {/* Order Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.order} onValueChange={handleOrderChange}>
-          <SelectTrigger>
+          <SelectTrigger data-testid="flashcards-order-filter">
             <SelectValue placeholder="Kolejność" />
           </SelectTrigger>
           <SelectContent>

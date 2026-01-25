@@ -32,7 +32,7 @@ export default function DeleteFlashcardDialog({
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
+      <AlertDialogContent data-testid="delete-flashcard-dialog">
         <AlertDialogHeader>
           <AlertDialogTitle>Usuń fiszkę</AlertDialogTitle>
           <AlertDialogDescription>
@@ -42,11 +42,12 @@ export default function DeleteFlashcardDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Anuluj</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting} data-testid="delete-flashcard-cancel-button">Anuluj</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            data-testid="delete-flashcard-confirm-button"
           >
             {isDeleting ? 'Usuwanie...' : 'Usuń'}
           </AlertDialogAction>

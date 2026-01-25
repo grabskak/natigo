@@ -113,6 +113,7 @@ export function GenerateForm({
       onSubmit={handleSubmit}
       className={cn("space-y-4", className)}
       noValidate
+      data-testid="generate-form"
     >
       {/* Instructions */}
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -156,6 +157,7 @@ export function GenerateForm({
           )}
           aria-invalid={!validation.isValid && validation.message ? "true" : "false"}
           aria-describedby={validation.message ? "text-error" : undefined}
+          data-testid="generate-input-textarea"
         />
 
         {/* Validation Message */}
@@ -164,6 +166,7 @@ export function GenerateForm({
             id="text-error"
             className="text-sm text-red-600 dark:text-red-400"
             role="alert"
+            data-testid="generate-validation-error"
           >
             {validation.message}
           </p>
@@ -176,6 +179,7 @@ export function GenerateForm({
           type="submit"
           disabled={!validation.isValid || isLoading}
           className="min-w-[180px]"
+          data-testid="generate-submit-button"
         >
           {isLoading ? "Generowanie..." : "Generuj fiszki"}
         </Button>
@@ -185,6 +189,7 @@ export function GenerateForm({
           variant="outline"
           onClick={handleClear}
           disabled={isLoading || text.length === 0}
+          data-testid="generate-clear-button"
         >
           Wyczyść
         </Button>

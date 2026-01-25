@@ -113,7 +113,7 @@ export function CandidatesReview({
   const displayError = localError || saveError;
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("space-y-6", className)} data-testid="candidates-review-container">
       {/* Header with stats */}
       <CandidatesHeader stats={stats} metadata={metadata} />
 
@@ -122,6 +122,7 @@ export function CandidatesReview({
         <div
           className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
           role="alert"
+          data-testid="candidates-review-error"
         >
           <div className="flex items-start gap-3">
             <svg

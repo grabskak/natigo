@@ -160,7 +160,7 @@ export default function FlashcardModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px]" data-testid="flashcard-modal">
         <DialogHeader>
           <DialogTitle>
             {mode === 'add' ? 'Dodaj fiszkę ręcznie' : 'Edytuj fiszkę'}
@@ -191,6 +191,7 @@ export default function FlashcardModal({
                     ? 'border-destructive'
                     : ''
                 }
+                data-testid="flashcard-modal-front-input"
               />
               
               {/* Character Counter */}
@@ -232,6 +233,7 @@ export default function FlashcardModal({
                     ? 'border-destructive'
                     : ''
                 }
+                data-testid="flashcard-modal-back-textarea"
               />
               
               {/* Character Counter */}
@@ -257,7 +259,7 @@ export default function FlashcardModal({
 
             {/* API Error */}
             {error && (
-              <div className="rounded-md bg-destructive/10 p-3">
+              <div className="rounded-md bg-destructive/10 p-3" data-testid="flashcard-modal-error">
                 <p className="text-sm text-destructive">{error.message}</p>
               </div>
             )}
@@ -269,10 +271,11 @@ export default function FlashcardModal({
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
+              data-testid="flashcard-modal-cancel-button"
             >
               Anuluj
             </Button>
-            <Button type="submit" disabled={!canSubmit}>
+            <Button type="submit" disabled={!canSubmit} data-testid="flashcard-modal-submit-button">
               {isSubmitting ? 'Zapisywanie...' : 'Zapisz'}
             </Button>
           </DialogFooter>

@@ -192,19 +192,20 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
 
   if (mode === "register" && registerSubmitted) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4" data-testid="auth-email-confirmation-message">
         <p className="text-sm text-muted-foreground">
           Wysłaliśmy link do potwierdzenia konta na adres <span className="font-medium">{email.trim()}</span>. Kliknij w
           link w wiadomości (sprawdź też spam), a następnie zaloguj się.
         </p>
         <div className="flex flex-col gap-2">
-          <a href={loginHref} className="text-sm text-primary underline-offset-4 hover:underline">
+          <a href={loginHref} className="text-sm text-primary underline-offset-4 hover:underline" data-testid="auth-go-to-login-link">
             Przejdź do logowania
           </a>
           <button
             type="button"
             className="text-left text-sm text-muted-foreground underline-offset-4 hover:underline"
             onClick={() => setRegisterSubmitted(false)}
+            data-testid="auth-change-email-button"
           >
             Zmień email
           </button>
@@ -214,7 +215,7 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" data-testid="auth-form">
       <div className="space-y-2">
         <Label htmlFor={emailId}>Email</Label>
         <Input
@@ -225,8 +226,9 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
           placeholder="you@example.com"
           autoComplete="email"
           aria-invalid={emailError ? "true" : "false"}
+          data-testid="auth-email-input"
         />
-        {emailError ? <p className="text-sm text-destructive">{emailError}</p> : null}
+        {emailError ? <p className="text-sm text-destructive" data-testid="auth-email-error">{emailError}</p> : null}
       </div>
 
       <div className="space-y-2">
@@ -245,8 +247,9 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
           onChange={(e) => setPassword(e.target.value)}
           autoComplete={mode === "login" ? "current-password" : "new-password"}
           aria-invalid={passwordError ? "true" : "false"}
+          data-testid="auth-password-input"
         />
-        {passwordError ? <p className="text-sm text-destructive">{passwordError}</p> : null}
+        {passwordError ? <p className="text-sm text-destructive" data-testid="auth-password-error">{passwordError}</p> : null}
       </div>
 
       {mode === "register" ? (
@@ -259,14 +262,15 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
             onChange={(e) => setConfirmPassword(e.target.value)}
             autoComplete="new-password"
             aria-invalid={confirmPasswordError ? "true" : "false"}
+            data-testid="auth-confirm-password-input"
           />
-          {confirmPasswordError ? <p className="text-sm text-destructive">{confirmPasswordError}</p> : null}
+          {confirmPasswordError ? <p className="text-sm text-destructive" data-testid="auth-confirm-password-error">{confirmPasswordError}</p> : null}
         </div>
       ) : null}
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
+      {formError ? <p className="text-sm text-destructive" data-testid="auth-form-error">{formError}</p> : null}
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
+      <Button type="submit" className="w-full" disabled={isSubmitting} data-testid="auth-submit-button">
         {isSubmitting ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
