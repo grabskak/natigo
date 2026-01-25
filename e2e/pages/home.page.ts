@@ -11,7 +11,7 @@ export class HomePage {
 
   constructor(page: Page) {
     this.page = page;
-    
+
     // Locators
     this.heading = page.getByRole("heading", { level: 1 });
     this.loginButton = page.getByRole("link", { name: /log in|sign in/i });

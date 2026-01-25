@@ -8,7 +8,7 @@ test.describe("Home Page", () => {
 
     // Verify page loaded
     await expect(page).toHaveTitle(/natigo/i);
-    
+
     // Verify main heading is visible
     await expect(homePage.heading).toBeVisible();
   });

@@ -112,6 +112,127 @@ export class CandidatesReviewPage {
   async waitForReview() {
     await this.container.waitFor({ state: "visible" });
   }
+
+  /**
+   * Wait for review page to be ready
+   * Alias for waitForReview()
+   */
+  async waitForReady() {
+    await this.waitForReview();
+  }
+
+  /**
+   * Get the count of candidate cards
+   */
+  async getCandidateCount(): Promise<number> {
+    const cards = await this.page.getByTestId(/^candidate-card-\d+$/).all();
+    return cards.length;
+  }
+
+  /**
+   * Get candidate status by sequence number
+   */
+  async getCandidateStatus(sequenceNumber: number): Promise<string> {
+    const card = this.getCandidateCard(sequenceNumber);
+    const status = await card.getStatus();
+    return status?.toLowerCase() || "pending";
+  }
+
+  /**
+   * Get candidate front value by sequence number
+   */
+  async getCandidateFrontValue(sequenceNumber: number): Promise<string> {
+    const card = this.getCandidateCard(sequenceNumber);
+    return await card.getFrontValue();
+  }
+
+  /**
+   * Get candidate back value by sequence number
+   */
+  async getCandidateBackValue(sequenceNumber: number): Promise<string> {
+    const card = this.getCandidateCard(sequenceNumber);
+    return await card.getBackValue();
+  }
+
+  /**
+   * Check if candidate is in edit mode
+   */
+  async isInEditMode(sequenceNumber: number): Promise<boolean> {
+    const card = this.getCandidateCard(sequenceNumber);
+    return await card.isInEditMode();
+  }
+
+  /**
+   * Get save edit button for a candidate
+   */
+  getSaveEditButton(sequenceNumber: number): Locator {
+    return this.getCandidateCard(sequenceNumber).saveEditButton;
+  }
+
+  /**
+   * Get cancel edit button for a candidate
+   */
+  getCancelEditButton(sequenceNumber: number): Locator {
+    return this.getCandidateCard(sequenceNumber).cancelEditButton;
+  }
+
+  /**
+   * Get accept button for a candidate
+   */
+  getAcceptButton(sequenceNumber: number): Locator {
+    return this.getCandidateCard(sequenceNumber).acceptButton;
+  }
+
+  /**
+   * Fill candidate front input
+   */
+  async fillCandidateFront(sequenceNumber: number, value: string) {
+    const card = this.getCandidateCard(sequenceNumber);
+    await card.frontInput.fill(value);
+  }
+
+  /**
+   * Fill candidate back textarea
+   */
+  async fillCandidateBack(sequenceNumber: number, value: string) {
+    const card = this.getCandidateCard(sequenceNumber);
+    await card.backTextarea.fill(value);
+  }
+
+  /**
+   * Save edit for a candidate
+   */
+  async saveEdit(sequenceNumber: number) {
+    await this.getCandidateCard(sequenceNumber).saveEdit();
+  }
+
+  /**
+   * Cancel edit for a candidate
+   */
+  async cancelEdit(sequenceNumber: number) {
+    await this.getCandidateCard(sequenceNumber).cancelEdit();
+  }
+
+  /**
+   * Save accepted candidates (navigate to flashcards)
+   */
+  async saveAcceptedCandidates() {
+    await this.saveButton.click();
+  }
+
+  /**
+   * Cancel save and go back
+   */
+  async cancelSave() {
+    await this.cancelButton.click();
+  }
+
+  /**
+   * Get error display locator
+   */
+  get errorDisplay(): Locator {
+    return this.error;
+  }
 }
 
 /**
@@ -204,5 +325,40 @@ export class CandidateCard {
   async getStatus(): Promise<string | null> {
     const badge = this.card.locator("span.inline-flex").nth(1);
     return await badge.textContent();
+  }
+
+  /**
+   * Get front value (from input or display text)
+   */
+  async getFrontValue(): Promise<string> {
+    // Try to get value from input if in edit mode
+    const isEditing = await this.isInEditMode();
+    if (isEditing) {
+      return await this.frontInput.inputValue();
+    }
+    // Otherwise get from display element
+    const frontDisplay = this.card.getByTestId(`candidate-front-${this.sequenceNumber}`);
+    return (await frontDisplay.textContent()) || "";
+  }
+
+  /**
+   * Get back value (from textarea or display text)
+   */
+  async getBackValue(): Promise<string> {
+    // Try to get value from textarea if in edit mode
+    const isEditing = await this.isInEditMode();
+    if (isEditing) {
+      return await this.backTextarea.inputValue();
+    }
+    // Otherwise get from display element
+    const backDisplay = this.card.getByTestId(`candidate-back-${this.sequenceNumber}`);
+    return (await backDisplay.textContent()) || "";
+  }
+
+  /**
+   * Check if card is in edit mode
+   */
+  async isInEditMode(): Promise<boolean> {
+    return await this.saveEditButton.isVisible().catch(() => false);
   }
 }

@@ -8,13 +8,13 @@ import { Page } from "@playwright/test";
  * Wait for toast notification to appear
  */
 export async function waitForToast(page: Page, message?: string) {
-  const toast = page.locator('[data-sonner-toast]');
+  const toast = page.locator("[data-sonner-toast]");
   await toast.waitFor({ state: "visible", timeout: 5000 });
-  
+
   if (message) {
     await page.waitForSelector(`text=${message}`, { timeout: 5000 });
   }
-  
+
   return toast;
 }
 
@@ -22,7 +22,7 @@ export async function waitForToast(page: Page, message?: string) {
  * Wait for toast to disappear
  */
 export async function waitForToastClose(page: Page) {
-  const toast = page.locator('[data-sonner-toast]');
+  const toast = page.locator("[data-sonner-toast]");
   await toast.waitFor({ state: "hidden", timeout: 10000 });
 }
 
@@ -91,11 +91,7 @@ export async function getSearchParams(page: Page): Promise<Record<string, string
 /**
  * Login helper (reusable across tests)
  */
-export async function quickLogin(
-  page: Page,
-  email: string,
-  password: string
-) {
+export async function quickLogin(page: Page, email: string, password: string) {
   await page.goto("/login");
   await page.getByTestId("auth-email-input").fill(email);
   await page.getByTestId("auth-password-input").fill(password);
@@ -108,18 +104,18 @@ export async function quickLogin(
  */
 export async function clearAuth(page: Page) {
   await page.context().clearCookies();
-  await page.evaluate(() => localStorage.clear());
+  // Only clear localStorage if we're on a page (not about:blank)
+  try {
+    await page.evaluate(() => localStorage.clear());
+  } catch {
+    // Ignore if we can't access localStorage (e.g., on about:blank)
+  }
 }
 
 /**
  * Mock API response for testing
  */
-export async function mockApiResponse(
-  page: Page,
-  url: string | RegExp,
-  response: any,
-  status = 200
-) {
+export async function mockApiResponse(page: Page, url: string | RegExp, response: any, status = 200) {
   await page.route(url, (route) => {
     route.fulfill({
       status,
@@ -132,11 +128,7 @@ export async function mockApiResponse(
 /**
  * Wait for API call to complete
  */
-export async function waitForApiCall(
-  page: Page,
-  url: string | RegExp,
-  timeout = 10000
-) {
+export async function waitForApiCall(page: Page, url: string | RegExp, timeout = 10000) {
   const responsePromise = page.waitForResponse(url, { timeout });
   return await responsePromise;
 }
@@ -144,10 +136,7 @@ export async function waitForApiCall(
 /**
  * Take screenshot with timestamp
  */
-export async function takeTimestampedScreenshot(
-  page: Page,
-  name: string
-) {
+export async function takeTimestampedScreenshot(page: Page, name: string) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   await page.screenshot({
     path: `screenshots/${name}-${timestamp}.png`,

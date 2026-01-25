@@ -15,7 +15,7 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    
+
     // Locators
     this.emailInput = page.getByLabel(/email/i);
     this.passwordInput = page.getByLabel(/password/i);

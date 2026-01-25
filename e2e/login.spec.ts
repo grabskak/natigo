@@ -32,7 +32,7 @@ test.describe("Login Page", () => {
 
     // Wait for error message to appear
     await expect(loginPage.errorMessage).toBeVisible({ timeout: 5000 });
-    
+
     const errorText = await loginPage.getErrorText();
     expect(errorText).toBeTruthy();
   });

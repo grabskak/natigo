@@ -1,24 +1,19 @@
 import { test as base, expect } from "@playwright/test";
-import {
-  AuthPage,
-  GeneratePage,
-  CandidatesReviewPage,
-  FlashcardsPage,
-} from "./pages";
+import { AuthPage, GeneratePage, CandidatesReviewPage, FlashcardsPage } from "./pages";
 
 /**
  * Test fixtures for E2E tests
  * Provides pre-configured page objects and test data
  */
 
-type Fixtures = {
+interface Fixtures {
   authPage: AuthPage;
   generatePage: GeneratePage;
   candidatesReviewPage: CandidatesReviewPage;
   flashcardsPage: FlashcardsPage;
   testUser: { email: string; password: string };
   longText: string;
-};
+}
 
 /**
  * Extended test with fixtures
@@ -50,10 +45,9 @@ export const test = base.extend<Fixtures>({
 
   // Test user fixture
   testUser: async ({}, use) => {
-    // TODO: Replace with actual test user from seed data
     const testUser = {
-      email: process.env.TEST_USER_EMAIL || "test@example.com",
-      password: process.env.TEST_USER_PASSWORD || "password123",
+      email: process.env.E2E_USERNAME || "test@gmail.com",
+      password: process.env.E2E_PASSWORD || "tets!",
     };
     await use(testUser);
   },
