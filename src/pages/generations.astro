@@ -13,14 +13,11 @@ import { GenerateScreenContainer } from "../components/GenerateScreenContainer";
 export const prerender = false;
 ---
 
-<Layout title="Generate Flashcards | Natigo">
+<Layout title="Generowanie fiszek | Natigo">
   <main class="container mx-auto px-4 py-8">
     <div class="max-w-4xl mx-auto">
-      <h1 class="text-3xl font-bold mb-2">Generate Flashcards</h1>
-      <p class="text-gray-600 dark:text-gray-400 mb-8">
-        Paste your text and let AI create flashcards for you
-      </p>
-      
+      <h1 class="text-3xl font-bold mb-2">Wygeneruj fiszki</h1>
+      <p class="text-gray-600 dark:text-gray-400 mb-8">Wklej swój tekst i pozwól AI stworzyć fiszki dla Ciebie</p>
       <!-- React container with client:load directive -->
       <GenerateScreenContainer client:load />
     </div>

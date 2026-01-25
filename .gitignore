@@ -23,3 +23,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 src/env.d.ts
+
+# test artifacts
+coverage/
+test-results/
+playwright-report/
+.vitest/
+.auth/

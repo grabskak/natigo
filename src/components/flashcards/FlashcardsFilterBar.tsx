@@ -46,14 +46,14 @@ export default function FlashcardsFilterBar({
       {/* Source Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.source} onValueChange={handleSourceChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Filter by source" />
+          <SelectTrigger data-testid="flashcards-source-filter">
+            <SelectValue placeholder="Filtruj według źródła" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Sources</SelectItem>
-            <SelectItem value="manual">Manual</SelectItem>
-            <SelectItem value="ai-full">AI Generated</SelectItem>
-            <SelectItem value="ai-edited">AI Edited</SelectItem>
+            <SelectItem value="all">Wszystkie źródła</SelectItem>
+            <SelectItem value="manual">Ręczne</SelectItem>
+            <SelectItem value="ai-full">Wygenerowane przez AI</SelectItem>
+            <SelectItem value="ai-edited">Edytowane AI</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -61,12 +61,12 @@ export default function FlashcardsFilterBar({
       {/* Sort By Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.sort} onValueChange={handleSortChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Sort by" />
+          <SelectTrigger data-testid="flashcards-sort-filter">
+            <SelectValue placeholder="Sortuj według" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="created_at">Created Date</SelectItem>
-            <SelectItem value="updated_at">Updated Date</SelectItem>
+            <SelectItem value="created_at">Data utworzenia</SelectItem>
+            <SelectItem value="updated_at">Data aktualizacji</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -74,12 +74,12 @@ export default function FlashcardsFilterBar({
       {/* Order Filter */}
       <div className="w-full sm:w-auto sm:min-w-[180px]">
         <Select value={filters.order} onValueChange={handleOrderChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Order" />
+          <SelectTrigger data-testid="flashcards-order-filter">
+            <SelectValue placeholder="Kolejność" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="desc">Newest First</SelectItem>
-            <SelectItem value="asc">Oldest First</SelectItem>
+            <SelectItem value="desc">Najnowsze najpierw</SelectItem>
+            <SelectItem value="asc">Najstarsze najpierw</SelectItem>
           </SelectContent>
         </Select>
       </div>

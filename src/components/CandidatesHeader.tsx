@@ -24,12 +24,11 @@ export function CandidatesHeader({
       {/* Title and Metadata */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          Review Generated Flashcards
+          Przejrzyj wygenerowane fiszki
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Generated {metadata.generated_count} flashcard
-          {metadata.generated_count !== 1 ? "s" : ""} from{" "}
-          {metadata.input_text_length.toLocaleString()} characters in{" "}
+          Wygenerowano {metadata.generated_count} {metadata.generated_count === 1 ? "fiszkę" : metadata.generated_count < 5 ? "fiszki" : "fiszek"} z{" "}
+          {metadata.input_text_length.toLocaleString()} znaków w{" "}
           {(metadata.duration_ms / 1000).toFixed(1)}s
         </p>
       </div>
@@ -42,7 +41,7 @@ export function CandidatesHeader({
             {stats.total}
           </div>
           <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-            Total
+            Wszystkie
           </div>
         </div>
 
@@ -52,7 +51,7 @@ export function CandidatesHeader({
             {stats.pending}
           </div>
           <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-            Pending
+            Oczekujące
           </div>
         </div>
 
@@ -62,7 +61,7 @@ export function CandidatesHeader({
             {stats.accepted}
           </div>
           <div className="text-xs text-green-600 dark:text-green-500 mt-1">
-            Accepted
+            Zaakceptowane
           </div>
         </div>
 
@@ -72,7 +71,7 @@ export function CandidatesHeader({
             {stats.edited}
           </div>
           <div className="text-xs text-orange-600 dark:text-orange-500 mt-1">
-            Edited
+            Edytowane
           </div>
         </div>
 
@@ -82,7 +81,7 @@ export function CandidatesHeader({
             {stats.rejected}
           </div>
           <div className="text-xs text-red-600 dark:text-red-500 mt-1">
-            Rejected
+            Odrzucone
           </div>
         </div>
       </div>
@@ -90,9 +89,9 @@ export function CandidatesHeader({
       {/* Instructions */}
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <p className="text-sm text-blue-700 dark:text-blue-300">
-          Review each flashcard below. You can <strong>Accept</strong> them as-is,{" "}
-          <strong>Edit</strong> to make changes, or <strong>Reject</strong> if not needed.
-          When you're done, click <strong>Save</strong> at the bottom to add accepted flashcards to your collection.
+          Przejrzyj każdą fiszkę poniżej. Możesz je <strong>Zaakceptować</strong> bez zmian,{" "}
+          <strong>Edytować</strong>, aby wprowadzić zmiany, lub <strong>Odrzucić</strong>, jeśli nie są potrzebne.
+          Kiedy skończysz, kliknij <strong>Zapisz</strong> na dole, aby dodać zaakceptowane fiszki do swojej kolekcji.
         </p>
       </div>
     </div>

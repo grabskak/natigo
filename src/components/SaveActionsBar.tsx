@@ -36,6 +36,7 @@ export function SaveActionsBar({
         "shadow-lg",
         className
       )}
+      data-testid="save-actions-bar"
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
@@ -45,14 +46,14 @@ export function SaveActionsBar({
               <>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {acceptedCount} flashcard{acceptedCount !== 1 ? "s" : ""} ready to save
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100" data-testid="save-actions-counter">
+                    {acceptedCount} {acceptedCount === 1 ? "fiszka" : acceptedCount < 5 ? "fiszki" : "fiszek"} gotowa do zapisu
                   </span>
                 </div>
               </>
             ) : (
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                No flashcards selected. Accept or edit candidates above to continue.
+                Nie wybrano fiszek. Zaakceptuj lub edytuj kandydatów powyżej, aby kontynuować.
               </span>
             )}
           </div>
@@ -63,21 +64,23 @@ export function SaveActionsBar({
               onClick={onCancel}
               variant="outline"
               disabled={isSaving}
+              data-testid="save-actions-cancel-button"
             >
-              Cancel
+              Anuluj
             </Button>
             <Button
               onClick={onSave}
               disabled={!canSave}
               className="min-w-[140px]"
+              data-testid="save-actions-save-button"
             >
               {isSaving ? (
                 <>
                   <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
-                  Saving...
+                  Zapisywanie...
                 </>
               ) : (
-                `Save ${acceptedCount} flashcard${acceptedCount !== 1 ? "s" : ""}`
+                `Zapisz ${acceptedCount} ${acceptedCount === 1 ? "fiszkę" : acceptedCount < 5 ? "fiszki" : "fiszek"}`
               )}
             </Button>
           </div>

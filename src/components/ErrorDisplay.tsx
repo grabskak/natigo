@@ -34,19 +34,19 @@ export function ErrorDisplay({
   const getErrorTitle = () => {
     switch (error.code) {
       case "RATE_LIMIT_EXCEEDED":
-        return "Rate Limit Exceeded";
+        return "Przekroczono limit zapytań";
       case "AI_TIMEOUT":
-        return "Request Timeout";
+        return "Upłynął czas żądania";
       case "AI_SERVICE_ERROR":
-        return "AI Service Error";
+        return "Błąd usługi AI";
       case "NETWORK_ERROR":
-        return "Connection Error";
+        return "Błąd połączenia";
       case "VALIDATION_FAILED":
-        return "Invalid Input";
+        return "Nieprawidłowe dane";
       case "AUTH_REQUIRED":
-        return "Authentication Required";
+        return "Wymagane uwierzytelnienie";
       default:
-        return "An Error Occurred";
+        return "Wystąpił błąd";
     }
   };
 
@@ -56,7 +56,7 @@ export function ErrorDisplay({
 
     // Rate limit details
     if (error.code === "RATE_LIMIT_EXCEEDED" && typeof error.details === "object" && "retry_after_seconds" in error.details) {
-      return `Please try again in ${error.details.retry_after_seconds} seconds.`;
+      return `Spróbuj ponownie za ${error.details.retry_after_seconds} sekund.`;
     }
 
     return null;
@@ -110,12 +110,12 @@ export function ErrorDisplay({
       <div className="flex gap-3 mt-6">
         {canRetry && onRetry && (
           <Button onClick={onRetry} variant="default">
-            Try Again
+            Spróbuj ponownie
           </Button>
         )}
         {onBackToForm && (
           <Button onClick={onBackToForm} variant="outline">
-            Back to Form
+            Powrót do formularza
           </Button>
         )}
       </div>

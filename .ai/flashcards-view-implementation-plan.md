@@ -36,6 +36,7 @@ Widok realizuje user stories: US-005 (autoryzacja), US-006 (tworzenie), US-007 (
 flashcards.astro (Astro page)
 └── FlashcardsView (React, client:load)
     ├── FlashcardsHeader
+    │   ├── Button ("Generate New Flashcards")
     │   └── Button ("Add Manual Flashcard")
     ├── FlashcardsFilterBar
     │   ├── Select (Source filter)
@@ -91,6 +92,7 @@ Główny kontener zarządzający całym stanem widoku. Jest to komponent React z
 - `onAddFlashcard` - otwiera modal w trybie "add"
 - `onEditFlashcard(flashcard)` - otwiera modal w trybie "edit"
 - `onDeleteFlashcard(id)` - otwiera dialog potwierdzenia usunięcia
+- `onGenerateFlashcards` - przekierowuje do widoku generowania (/generations)
 - `onFilterChange(filters)` - aktualizuje filtry i pobiera dane
 - `onPageChange(page)` - zmienia stronę paginacji
 - `onModalSubmit(data)` - zapisuje nową/edytowaną fiszkę
@@ -108,19 +110,23 @@ Główny kontener zarządzający całym stanem widoku. Jest to komponent React z
 **Propsy:**
 - `initialPage?: number` - początkowy numer strony z URL
 - `initialFilters?: Partial<ListFlashcardsQuery>` - początkowe filtry z URL
+- `onNavigateToGenerate?: () => void` - callback do nawigacji do widoku generowania
 
 ### FlashcardsHeader
 
 **Opis:**
-Nagłówek strony zawierający tytuł i przycisk do dodawania fiszek manualnie. Prosty prezentacyjny komponent.
+Nagłówek strony zawierający tytuł i przyciski do dodawania fiszek manualnie oraz generowania nowych fiszek przez AI. Prosty prezentacyjny komponent.
 
 **Główne elementy:**
 - `<div className="flex justify-between items-center mb-6">`
   - `<h1 className="text-3xl font-bold">My Flashcards</h1>`
-  - `<Button variant="default" onClick={onAddClick}>Add Manual Flashcard</Button>`
+  - `<div className="flex gap-3">`
+    - `<Button variant="outline" onClick={onGenerateClick}>Generate New Flashcards</Button>`
+    - `<Button variant="default" onClick={onAddClick}>Add Manual Flashcard</Button>`
 
 **Obsługiwane zdarzenia:**
-- `onAddClick` - wywołuje callback do otwarcia modala
+- `onAddClick` - wywołuje callback do otwarcia modala dodawania fiszki
+- `onGenerateClick` - przekierowuje użytkownika do widoku generowania fiszek (/generations)
 
 **Warunki walidacji:**
 - Brak
@@ -132,6 +138,7 @@ Nagłówek strony zawierający tytuł i przycisk do dodawania fiszek manualnie. 
 ```typescript
 interface FlashcardsHeaderProps {
   onAddClick: () => void;
+  onGenerateClick: () => void;
 }
 ```
 
@@ -407,12 +414,12 @@ Komponent wyświetlany gdy brak fiszek. Dwa warianty: całkowity brak fiszek lub
 - `<div className="text-center py-12">`
   - `<p className="text-lg text-muted-foreground mb-4">{message}</p>`
   - `<div className="flex gap-4 justify-center">`
-    - `<Button onClick={onGenerateClick}>Generate Flashcards</Button>` (jeśli total brak)
+    - `<Button onClick={onGenerateClick}>Generate New Flashcards</Button>` (jeśli total brak)
     - `<Button variant="outline" onClick={onAddManualClick}>Add Manual Flashcard</Button>` (jeśli total brak)
     - `<Button onClick={onClearFilters}>Clear Filters</Button>` (jeśli filtered empty)
 
 **Obsługiwane zdarzenia:**
-- `onGenerateClick` - przekierowanie do /generate
+- `onGenerateClick` - przekierowanie do /generations
 - `onAddManualClick` - otwarcie modala dodawania
 - `onClearFilters` - czyszczenie filtrów
 
@@ -631,6 +638,9 @@ interface UseFlashcardsReturn {
   closeDeleteDialog: () => void;
   confirmDelete: () => Promise<void>;
   
+  // Navigation
+  navigateToGenerate: () => void;
+  
   // Refresh
   refetch: () => Promise<void>;
 }
@@ -705,7 +715,8 @@ useEffect(() => {
 7. **submitModal(data)** - zapisuje fiszkę (create/update)
 8. **openDeleteDialog(id)** - otwiera dialog usuwania
 9. **confirmDelete()** - wykonuje usunięcie fiszki
-10. **refetch()** - odświeża listę fiszek
+10. **navigateToGenerate()** - przekierowuje użytkownika do /generations
+11. **refetch()** - odświeża listę fiszek
 
 ### Alternatywa: useReducer
 
@@ -1191,6 +1202,18 @@ export class FlashcardsApiService {
    - Aktualizuje URL: `?page=1`
    - Pobiera dane bez filtrów
    - Wyświetla pełną listę
+
+### 9. Nawigacja do widoku generowania
+
+**Flow:**
+1. Użytkownik klika przycisk "Generate New Flashcards" w header lub w empty state
+2. System przekierowuje użytkownika do `/generations`
+3. Użytkownik przechodzi do widoku generowania fiszek przez AI
+
+**Kontekst użycia:**
+- Przycisk dostępny w header zawsze (gdy użytkownik ma fiszki lub nie)
+- Przycisk dostępny w total empty state jako główna akcja CTA
+- Zapewnia szybki dostęp do głównej funkcjonalności aplikacji (generowanie przez AI)
 
 ## 9. Warunki i walidacja
 
@@ -1707,8 +1730,10 @@ function logError(context: string, error: unknown) {
 7. **FlashcardsHeader:**
    - Layout (flex, justify-between)
    - Tytuł h1
-   - Button "Add Manual Flashcard"
-   - Props: onAddClick
+   - Grupa przycisków (flex gap-3)
+   - Button "Generate New Flashcards" (outline variant)
+   - Button "Add Manual Flashcard" (default variant)
+   - Props: onAddClick, onGenerateClick
 
 8. **FlashcardsFilterBar:**
    - 3x Select (Source, Sort by, Order)
@@ -1734,8 +1759,10 @@ function logError(context: string, error: unknown) {
 11. **EmptyState:**
     - Dwa warianty (total-empty, filtered-empty)
     - Odpowiednie komunikaty
-    - Przyciski CTA (Generate/Add Manual/Clear Filters)
-    - Props: variant, callbacks
+    - Przyciski CTA:
+      - Total empty: "Generate New Flashcards" (primary) i "Add Manual Flashcard" (outline)
+      - Filtered empty: "Clear Filters"
+    - Props: variant, callbacks (onGenerateClick, onAddManualClick, onClearFilters)
 
 12. **Pagination:**
     - Używanie Pagination z Shadcn/ui
@@ -1773,7 +1800,7 @@ function logError(context: string, error: unknown) {
     - Setup useFlashcards hook z initial props
     - Layout głównego kontenera
     - Renderowanie wszystkich child components
-    - Przekazywanie callbacks i state
+    - Przekazywanie callbacks i state (w tym navigateToGenerate)
     - Warunkowe renderowanie modala i dialogu
     - Error boundary (opcjonalnie)
 
@@ -1906,6 +1933,7 @@ Mapowanie user stories na implementację:
   - Badge indicator dla source (manual/ai-full/ai-edited)
   - Filtrowanie po source
   - Wszystkie fiszki widoczne w jednej liście
+  - Przycisk "Generate New Flashcards" dla łatwego dostępu do generowania kolejnych fiszek
 
 ## Appendix B: Przykłady kodu kluczowych funkcji
 

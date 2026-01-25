@@ -69,8 +69,8 @@ export function GenerateScreenContainer() {
    */
   const handleSaveSuccess = useCallback(() => {
     // Show success toast
-    toast.success("Flashcards saved successfully!", {
-      description: "Your flashcards have been added to your collection.",
+    toast.success("Fiszki zapisane pomyślnie!", {
+      description: "Twoje fiszki zostały dodane do kolekcji.",
       duration: 3000,
     });
     

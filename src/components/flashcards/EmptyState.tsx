@@ -24,15 +24,15 @@ export default function EmptyState({
       <div className="text-center py-12">
         <FileQuestion className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
         <p className="text-lg text-muted-foreground mb-2">
-          You don't have any flashcards yet
+          Nie masz jeszcze żadnych fiszek
         </p>
         <p className="text-sm text-muted-foreground mb-6">
-          Get started by generating flashcards from text or adding them manually
+          Zacznij od wygenerowania fiszek z tekstu lub dodaj je ręcznie
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <Button onClick={onGenerateClick}>Generate Flashcards</Button>
+          <Button onClick={onGenerateClick}>Generuj fiszki</Button>
           <Button variant="outline" onClick={onAddManualClick}>
-            Add Manual Flashcard
+            Dodaj fiszkę ręcznie
           </Button>
         </div>
       </div>
@@ -44,12 +44,12 @@ export default function EmptyState({
     <div className="text-center py-12">
       <Filter className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
       <p className="text-lg text-muted-foreground mb-2">
-        No flashcards match your filters
+        Brak fiszek pasujących do filtrów
       </p>
       <p className="text-sm text-muted-foreground mb-6">
-        Try adjusting your filters or clear them to see all flashcards
+        Spróbuj dostosować filtry lub wyczyść je, aby zobaczyć wszystkie fiszki
       </p>
-      <Button onClick={onClearFilters}>Clear Filters</Button>
+      <Button onClick={onClearFilters}>Wyczyść filtry</Button>
     </div>
   );
 }

@@ -239,3 +239,108 @@ export async function listFlashcards(
     },
   };
 }
+
+/**
+ * Updates an existing flashcard's front and back content
+ * Verifies ownership before updating
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - User ID who owns the flashcard
+ * @param flashcardId - ID of the flashcard to update
+ * @param updateData - New content for front and back
+ * @returns Promise resolving to updated flashcard DTO
+ * @throws {Error} When flashcard not found or doesn't belong to user
+ * @throws {Error} When database update fails
+ *
+ * @example
+ * const updated = await updateFlashcard(supabase, userId, flashcardId, { front: "New front", back: "New back" });
+ */
+export async function updateFlashcard(
+  supabase: SupabaseClient,
+  userId: string,
+  flashcardId: string,
+  updateData: { front: string; back: string }
+): Promise<FlashcardDto> {
+  // Step 1: Verify flashcard exists and belongs to user
+  const { data: existingFlashcard, error: fetchError } = await supabase
+    .from("flashcards")
+    .select("id, user_id")
+    .eq("id", flashcardId)
+    .eq("user_id", userId)
+    .single();
+
+  if (fetchError || !existingFlashcard) {
+    throw new Error("Flashcard not found or you don't have permission to update it");
+  }
+
+  // Step 2: Update flashcard in database
+  const { data: updatedFlashcard, error: updateError } = await supabase
+    .from("flashcards")
+    .update({
+      front: updateData.front.trim(),
+      back: updateData.back.trim(),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", flashcardId)
+    .select("id, generation_id, front, back, source, created_at, updated_at")
+    .single();
+
+  if (updateError || !updatedFlashcard) {
+    console.error("Failed to update flashcard:", updateError);
+    throw new Error("Failed to update flashcard");
+  }
+
+  // Step 3: Return updated flashcard DTO
+  return {
+    id: updatedFlashcard.id,
+    generation_id: updatedFlashcard.generation_id,
+    front: updatedFlashcard.front,
+    back: updatedFlashcard.back,
+    source: updatedFlashcard.source,
+    created_at: updatedFlashcard.created_at,
+    updated_at: updatedFlashcard.updated_at,
+  };
+}
+
+/**
+ * Permanently deletes a flashcard
+ * Verifies ownership before deletion
+ *
+ * @param supabase - Supabase client instance
+ * @param userId - User ID who owns the flashcard
+ * @param flashcardId - ID of the flashcard to delete
+ * @returns Promise resolving when deletion is complete
+ * @throws {Error} When flashcard not found or doesn't belong to user
+ * @throws {Error} When database deletion fails
+ *
+ * @example
+ * await deleteFlashcard(supabase, userId, flashcardId);
+ */
+export async function deleteFlashcard(
+  supabase: SupabaseClient,
+  userId: string,
+  flashcardId: string
+): Promise<void> {
+  // Step 1: Verify flashcard exists and belongs to user
+  const { data: existingFlashcard, error: fetchError } = await supabase
+    .from("flashcards")
+    .select("id, user_id")
+    .eq("id", flashcardId)
+    .eq("user_id", userId)
+    .single();
+
+  if (fetchError || !existingFlashcard) {
+    throw new Error("Flashcard not found or you don't have permission to delete it");
+  }
+
+  // Step 2: Delete flashcard from database
+  const { error: deleteError } = await supabase
+    .from("flashcards")
+    .delete()
+    .eq("id", flashcardId);
+
+  if (deleteError) {
+    console.error("Failed to delete flashcard:", deleteError);
+    throw new Error("Failed to delete flashcard");
+  }
+}

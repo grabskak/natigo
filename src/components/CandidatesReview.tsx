@@ -87,7 +87,7 @@ export function CandidatesReview({
     if (flashcardsToSave.length === 0) {
       setLocalError({
         code: "NO_FLASHCARDS",
-        message: "No flashcards to save. Please accept or edit at least one candidate.",
+        message: "Brak fiszek do zapisania. Zaakceptuj lub edytuj co najmniej jednego kandydata.",
       });
       return;
     }
@@ -105,7 +105,7 @@ export function CandidatesReview({
    * Handle cancel action
    */
   const handleCancel = useCallback(() => {
-    if (window.confirm("Are you sure you want to cancel? All decisions will be lost.")) {
+    if (window.confirm("Czy na pewno chcesz anulować? Wszystkie decyzje zostaną utracone.")) {
       onCancel();
     }
   }, [onCancel]);
@@ -113,7 +113,7 @@ export function CandidatesReview({
   const displayError = localError || saveError;
 
   return (
-    <div className={cn("space-y-6", className)}>
+    <div className={cn("space-y-6", className)} data-testid="candidates-review-container">
       {/* Header with stats */}
       <CandidatesHeader stats={stats} metadata={metadata} />
 
@@ -122,6 +122,7 @@ export function CandidatesReview({
         <div
           className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
           role="alert"
+          data-testid="candidates-review-error"
         >
           <div className="flex items-start gap-3">
             <svg
@@ -139,7 +140,7 @@ export function CandidatesReview({
             </svg>
             <div className="flex-1">
               <h3 className="text-sm font-medium text-red-800 dark:text-red-300 mb-1">
-                {displayError.code === "NO_FLASHCARDS" ? "No Flashcards Selected" : "Save Failed"}
+                {displayError.code === "NO_FLASHCARDS" ? "Nie wybrano fiszek" : "Zapisywanie nie powiodło się"}
               </h3>
               <p className="text-sm text-red-700 dark:text-red-400">
                 {displayError.message}

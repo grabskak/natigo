@@ -70,14 +70,14 @@ export function CandidateCard({
     if (length === 0) {
       return {
         isValid: false,
-        message: "Front cannot be empty",
+        message: "Przód nie może być pusty",
       };
     }
 
     if (length > FRONT_MAX) {
       return {
         isValid: false,
-        message: `Front must not exceed ${FRONT_MAX} characters (currently ${length})`,
+        message: `Przód nie może przekraczać ${FRONT_MAX} znaków (obecnie ${length})`,
       };
     }
 
@@ -97,14 +97,14 @@ export function CandidateCard({
     if (length === 0) {
       return {
         isValid: false,
-        message: "Back cannot be empty",
+        message: "Tył nie może być pusty",
       };
     }
 
     if (length > BACK_MAX) {
       return {
         isValid: false,
-        message: `Back must not exceed ${BACK_MAX} characters (currently ${length})`,
+        message: `Tył nie może przekraczać ${BACK_MAX} znaków (obecnie ${length})`,
       };
     }
 
@@ -181,25 +181,25 @@ export function CandidateCard({
       case "accepted":
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-            Accepted
+            Zaakceptowana
           </span>
         );
       case "edited":
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400">
-            Edited
+            Edytowana
           </span>
         );
       case "rejected":
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-            Rejected
+            Odrzucona
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400">
-            Pending
+            Oczekująca
           </span>
         );
     }
@@ -216,10 +216,11 @@ export function CandidateCard({
         !isRejected && "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700",
         className
       )}
+      data-testid={`candidate-card-${sequenceNumber}`}
     >
       {/* Header: Sequential Badge + Status Badge */}
       <div className="flex items-center justify-between mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+        <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" data-testid={`candidate-number-${sequenceNumber}`}>
           #{sequenceNumber}
         </span>
         {getStatusBadge()}
@@ -231,7 +232,7 @@ export function CandidateCard({
           {/* Front */}
           <div>
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-              Front
+              Przód
             </label>
             <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700">
               {displayFront}
@@ -241,7 +242,7 @@ export function CandidateCard({
           {/* Back */}
           <div>
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-              Back
+              Tył
             </label>
             <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700 whitespace-pre-wrap">
               {displayBack}
@@ -260,7 +261,7 @@ export function CandidateCard({
                 htmlFor={`front-${sequenceNumber}`}
                 className="block text-xs font-medium text-gray-700 dark:text-gray-300"
               >
-                Front
+                Przód
               </label>
               <CharacterCounter
                 current={localFront.trim().length}
@@ -281,6 +282,7 @@ export function CandidateCard({
               )}
               aria-invalid={!frontValidation.isValid}
               aria-describedby={frontValidation.message ? `front-error-${sequenceNumber}` : undefined}
+              data-testid={`candidate-front-input-${sequenceNumber}`}
             />
             {frontValidation.message && (
               <p
@@ -300,7 +302,7 @@ export function CandidateCard({
                 htmlFor={`back-${sequenceNumber}`}
                 className="block text-xs font-medium text-gray-700 dark:text-gray-300"
               >
-                Back
+                Tył
               </label>
               <CharacterCounter
                 current={localBack.trim().length}
@@ -319,6 +321,7 @@ export function CandidateCard({
               )}
               aria-invalid={!backValidation.isValid}
               aria-describedby={backValidation.message ? `back-error-${sequenceNumber}` : undefined}
+              data-testid={`candidate-back-textarea-${sequenceNumber}`}
             />
             {backValidation.message && (
               <p
@@ -337,47 +340,47 @@ export function CandidateCard({
       <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
         {!isEditing && decision === "pending" && (
           <>
-            <Button size="sm" onClick={onAccept} variant="default">
-              Accept
+            <Button size="sm" onClick={onAccept} variant="default" data-testid={`candidate-accept-button-${sequenceNumber}`}>
+              Akceptuj
             </Button>
-            <Button size="sm" onClick={handleStartEdit} variant="outline">
-              Edit
+            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+              Edytuj
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive">
-              Reject
+            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+              Odrzuć
             </Button>
           </>
         )}
 
         {!isEditing && decision === "accepted" && (
           <>
-            <Button size="sm" onClick={handleStartEdit} variant="outline">
-              Edit
+            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+              Edytuj
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive">
-              Reject
+            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+              Odrzuć
             </Button>
           </>
         )}
 
         {!isEditing && decision === "edited" && (
           <>
-            <Button size="sm" onClick={handleStartEdit} variant="outline">
-              Edit Again
+            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+              Edytuj ponownie
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive">
-              Reject
+            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+              Odrzuć
             </Button>
           </>
         )}
 
         {!isEditing && decision === "rejected" && (
           <>
-            <Button size="sm" onClick={onAccept} variant="default">
-              Accept
+            <Button size="sm" onClick={onAccept} variant="default" data-testid={`candidate-accept-button-${sequenceNumber}`}>
+              Akceptuj
             </Button>
-            <Button size="sm" onClick={handleStartEdit} variant="outline">
-              Edit
+            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+              Edytuj
             </Button>
           </>
         )}
@@ -389,11 +392,12 @@ export function CandidateCard({
               onClick={handleSaveEdit}
               disabled={!canSaveEdit}
               variant="default"
+              data-testid={`candidate-save-edit-button-${sequenceNumber}`}
             >
-              Save Edit
+              Zapisz edycję
             </Button>
-            <Button size="sm" onClick={handleCancelEdit} variant="outline">
-              Cancel
+            <Button size="sm" onClick={handleCancelEdit} variant="outline" data-testid={`candidate-cancel-edit-button-${sequenceNumber}`}>
+              Anuluj
             </Button>
           </>
         )}

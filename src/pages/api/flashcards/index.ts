@@ -3,6 +3,7 @@ import { CreateFlashcardsRequestSchema, ListFlashcardsQuerySchema } from "../../
 import { processFlashcardCreation, listFlashcards } from "../../../lib/services/flashcard.service";
 import { ValidationError, ForbiddenError } from "../../../lib/errors/flashcard.errors";
 import type { ErrorResponse } from "../../../types";
+import { errorResponse } from "../../../lib/utils/api-helpers";
 
 export const prerender = false;
 
@@ -17,13 +18,11 @@ export const prerender = false;
  */
 export const GET: APIRoute = async ({ request, locals }) => {
   try {
-    // Step 1: Get Supabase client from locals (set by middleware)
     const supabase = locals.supabase;
-    const user = {
-      id: "e3772e64-42ce-4cbf-b16c-89696e01a6e3",
-    };
-
-    console.log("✅ GET /api/flashcards - User ID:", user.id);
+    const user = locals.user;
+    if (!user) {
+      return errorResponse(401, "AUTH_REQUIRED", "Authentication is required");
+    }
 
     /*
     // Step 2: Extract and validate Authorization header
@@ -111,16 +110,13 @@ export const GET: APIRoute = async ({ request, locals }) => {
     // Step 5: Fetch flashcards from database
     const result = await listFlashcards(supabase, user.id, validation.data);
 
-    console.log("✅ Fetched flashcards:", result.data.length, "total:", result.pagination.total);
-
     // Step 6: Return success response
     return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch {
     // Generic server error (500)
-    console.error("Unexpected error in GET /api/flashcards:", error);
     return new Response(
       JSON.stringify({
         error: {
@@ -149,13 +145,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
  */
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    // Step 1: Get Supabase client from locals (set by middleware)
     const supabase = locals.supabase;
-    const user = {
-      id: "e3772e64-42ce-4cbf-b16c-89696e01a6e3", // np. "123e4567-e89b-12d3-a456-426614174000"
-    };
-
-    console.log("✅ User ID:", user.id);
+    const user = locals.user;
+    if (!user) {
+      return errorResponse(401, "AUTH_REQUIRED", "Authentication is required");
+    }
     /*
     // Step 2: Extract and validate Authorization header
     const authHeader = request.headers.get("Authorization");

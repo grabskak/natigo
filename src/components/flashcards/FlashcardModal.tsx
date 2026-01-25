@@ -160,15 +160,15 @@ export default function FlashcardModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px]" data-testid="flashcard-modal">
         <DialogHeader>
           <DialogTitle>
-            {mode === 'add' ? 'Add Manual Flashcard' : 'Edit Flashcard'}
+            {mode === 'add' ? 'Dodaj fiszkę ręcznie' : 'Edytuj fiszkę'}
           </DialogTitle>
           <DialogDescription>
             {mode === 'add'
-              ? 'Create a new flashcard by filling in the front and back content.'
-              : 'Edit the content of your flashcard.'}
+              ? 'Utwórz nową fiszkę, wypełniając zawartość przodu i tyłu.'
+              : 'Edytuj zawartość swojej fiszki.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -177,20 +177,21 @@ export default function FlashcardModal({
             {/* Front Field */}
             <div className="space-y-2">
               <Label htmlFor="front" className="text-sm font-medium">
-                Front
+                Przód
               </Label>
               <Input
                 id="front"
                 value={formData.front}
                 onChange={handleFrontChange}
                 onBlur={handleFrontBlur}
-                placeholder="Enter the front of the flashcard..."
+                placeholder="Wpisz przód fiszki..."
                 disabled={isSubmitting}
                 className={
                   touched.front && !validation.front.isValid
                     ? 'border-destructive'
                     : ''
                 }
+                data-testid="flashcard-modal-front-input"
               />
               
               {/* Character Counter */}
@@ -202,7 +203,7 @@ export default function FlashcardModal({
                       : 'text-muted-foreground'
                   }`}
                 >
-                  {frontLength}/200 characters
+                  {frontLength}/200 znaków
                 </p>
               </div>
 
@@ -217,14 +218,14 @@ export default function FlashcardModal({
             {/* Back Field */}
             <div className="space-y-2">
               <Label htmlFor="back" className="text-sm font-medium">
-                Back
+                Tył
               </Label>
               <Textarea
                 id="back"
                 value={formData.back}
                 onChange={handleBackChange}
                 onBlur={handleBackBlur}
-                placeholder="Enter the back of the flashcard..."
+                placeholder="Wpisz tył fiszki..."
                 rows={4}
                 disabled={isSubmitting}
                 className={
@@ -232,6 +233,7 @@ export default function FlashcardModal({
                     ? 'border-destructive'
                     : ''
                 }
+                data-testid="flashcard-modal-back-textarea"
               />
               
               {/* Character Counter */}
@@ -243,7 +245,7 @@ export default function FlashcardModal({
                       : 'text-muted-foreground'
                   }`}
                 >
-                  {backLength}/500 characters
+                  {backLength}/500 znaków
                 </p>
               </div>
 
@@ -257,7 +259,7 @@ export default function FlashcardModal({
 
             {/* API Error */}
             {error && (
-              <div className="rounded-md bg-destructive/10 p-3">
+              <div className="rounded-md bg-destructive/10 p-3" data-testid="flashcard-modal-error">
                 <p className="text-sm text-destructive">{error.message}</p>
               </div>
             )}
@@ -269,11 +271,12 @@ export default function FlashcardModal({
               variant="outline"
               onClick={onClose}
               disabled={isSubmitting}
+              data-testid="flashcard-modal-cancel-button"
             >
-              Cancel
+              Anuluj
             </Button>
-            <Button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? 'Saving...' : 'Save'}
+            <Button type="submit" disabled={!canSubmit} data-testid="flashcard-modal-submit-button">
+              {isSubmitting ? 'Zapisywanie...' : 'Zapisz'}
             </Button>
           </DialogFooter>
         </form>

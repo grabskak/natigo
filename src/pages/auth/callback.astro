@@ -1,0 +1,29 @@
+---
+import AuthLayout from "@/layouts/AuthLayout.astro";
+import { AuthCallbackView } from "@/components/auth/AuthCallbackView";
+import { getSafeNext } from "@/lib/utils/safe-next";
+
+export const prerender = false;
+
+const url = new URL(Astro.request.url);
+const code = url.searchParams.get("code");
+const next = url.searchParams.get("next") ?? undefined;
+const safeNext = getSafeNext(next);
+const destination = safeNext ?? "/flashcards";
+
+if (code) {
+  const { error } = await Astro.locals.supabase.auth.exchangeCodeForSession(code);
+  if (!error) {
+    return Astro.redirect(destination);
+  }
+}
+---
+
+<AuthLayout
+  title="Auth callback | Natigo"
+  description="Finishing authentication"
+  heading="Kończymy logowanie…"
+  subheading="Za chwilę nastąpi przekierowanie."
+>
+  <AuthCallbackView client:load next={destination} />
+</AuthLayout>

@@ -49,14 +49,14 @@ export function GenerateForm({
     if (length < MIN_CHARS) {
       return {
         isValid: false,
-        message: `Text must be at least ${MIN_CHARS.toLocaleString()} characters (currently ${length.toLocaleString()})`,
+        message: `Tekst musi mieć co najmniej ${MIN_CHARS.toLocaleString()} znaków (obecnie ${length.toLocaleString()})`,
       };
     }
 
     if (length > MAX_CHARS) {
       return {
         isValid: false,
-        message: `Text must not exceed ${MAX_CHARS.toLocaleString()} characters (currently ${length.toLocaleString()})`,
+        message: `Tekst nie może przekraczać ${MAX_CHARS.toLocaleString()} znaków (obecnie ${length.toLocaleString()})`,
       };
     }
 
@@ -113,16 +113,17 @@ export function GenerateForm({
       onSubmit={handleSubmit}
       className={cn("space-y-4", className)}
       noValidate
+      data-testid="generate-form"
     >
       {/* Instructions */}
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
         <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-          Instructions
+          Instrukcja
         </h3>
         <p className="text-sm text-blue-700 dark:text-blue-300">
-          Paste your text below (between {MIN_CHARS.toLocaleString()} and{" "}
-          {MAX_CHARS.toLocaleString()} characters). Our AI will analyze it and
-          generate flashcards for you to review.
+          Wklej swój tekst poniżej (od {MIN_CHARS.toLocaleString()} do{" "}
+          {MAX_CHARS.toLocaleString()} znaków). Nasze AI przeanalizuje go i
+          wygeneruje fiszki do przejrzenia.
         </p>
       </div>
 
@@ -133,7 +134,7 @@ export function GenerateForm({
             htmlFor="input-text"
             className="text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Your Text
+            Twój tekst
           </label>
           <CharacterCounter
             current={trimmedLength}
@@ -146,7 +147,7 @@ export function GenerateForm({
           id="input-text"
           value={text}
           onChange={handleChange}
-          placeholder="Paste your text here..."
+          placeholder="Wklej tutaj swój tekst..."
           rows={18}
           autoFocus
           disabled={isLoading}
@@ -156,6 +157,7 @@ export function GenerateForm({
           )}
           aria-invalid={!validation.isValid && validation.message ? "true" : "false"}
           aria-describedby={validation.message ? "text-error" : undefined}
+          data-testid="generate-input-textarea"
         />
 
         {/* Validation Message */}
@@ -164,6 +166,7 @@ export function GenerateForm({
             id="text-error"
             className="text-sm text-red-600 dark:text-red-400"
             role="alert"
+            data-testid="generate-validation-error"
           >
             {validation.message}
           </p>
@@ -176,8 +179,9 @@ export function GenerateForm({
           type="submit"
           disabled={!validation.isValid || isLoading}
           className="min-w-[180px]"
+          data-testid="generate-submit-button"
         >
-          {isLoading ? "Generating..." : "Generate Flashcards"}
+          {isLoading ? "Generowanie..." : "Generuj fiszki"}
         </Button>
 
         <Button
@@ -185,13 +189,14 @@ export function GenerateForm({
           variant="outline"
           onClick={handleClear}
           disabled={isLoading || text.length === 0}
+          data-testid="generate-clear-button"
         >
-          Clear
+          Wyczyść
         </Button>
 
         {isLoading && (
           <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
-            This may take up to 60 seconds...
+            To może potrwać do 60 sekund...
           </span>
         )}
       </div>

@@ -5,7 +5,7 @@
 natigo to webowa aplikacja do nauki z wykorzystaniem fiszek i spaced repetition, która minimalizuje koszt czasowy tworzenia materiału. Kluczową wartością MVP jest generowanie propozycji fiszek przez modele LLM (poprzez API) na podstawie wklejonego tekstu oraz szybka recenzja tych propozycji przez użytkownika (zaakceptuj/edytuj/odrzuć), z możliwością zbiorczego zapisu do bazy.Głównym założeniem biznesowym na pierwsze 3 miesiące działania jest pozyskanie grupy 100 aktywnych użytkowników, bez nacisku na monetyzację.
 
 Grupa docelowa (MVP):
-- Studenci i osoby uczące się języka (pierwszy przypadek użycia: tekst po angielsku, fiszki EN→PL).
+- Osoby uczące się 
 - Użytkownicy, którzy chcą szybko zamieniać notatki/artykuły na fiszki, bez ręcznego formatowania materiału.
 
 Kluczowe założenia MVP:
@@ -122,7 +122,6 @@ Ryzyka i czynniki krytyczne:
 - Aplikacje mobilne.
 
 4.3 Założenia i ograniczenia
-- Pierwszy przypadek użycia dotyczy tekstu po angielsku i fiszek EN→PL; inne języki/kierunki nie są wymagane w MVP.
 - Długość wejściowego tekstu jest ograniczona (1000–10 000 znaków), aby kontrolować koszt i jakość generowania.
 - Produkt nie wymaga zaawansowanej analityki zewnętrznej; metryki liczymy na podstawie tabel logów.
 
@@ -132,7 +131,8 @@ US-001
 - Tytuł: Rejestracja konta
 - Opis: Jako nowy użytkownik chcę założyć konto przez email i hasło, aby moje fiszki były prywatne i zapisane na stałe.
 - Kryteria akceptacji:
-  - Użytkownik może podać email i hasło oraz utworzyć konto.
+  - Rejestracja odbywa się na dedykowanej stronie.
+  - Użytkownik musi podać email i hasło , potwierdzić hasło oraz utworzyć konto.
   - System waliduje poprawność formatu email i minimalne wymagania hasła.
   - Po poprawnej rejestracji użytkownik jest zalogowany lub otrzymuje jasną informację o kolejnym kroku (np. potwierdzenie email, jeśli stosowane).
   - Próba rejestracji z istniejącym emailem kończy się czytelnym błędem.
@@ -141,9 +141,11 @@ US-002
 - Tytuł: Logowanie
 - Opis: Jako użytkownik chcę zalogować się emailem i hasłem, aby uzyskać dostęp do moich fiszek i powtórek.
 - Kryteria akceptacji:
+  - Logowanie odbywa się na dedykowanej stronie.
   - Poprawne dane logowania umożliwiają dostęp do aplikacji.
   - Niepoprawne dane logowania zwracają czytelny komunikat błędu bez ujawniania, czy email istnieje.
   - Po zalogowaniu użytkownik widzi tylko własne dane.
+   - Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
 
 US-003
 - Tytuł: Wylogowanie

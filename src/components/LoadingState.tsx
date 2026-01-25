@@ -12,7 +12,7 @@ interface LoadingStateProps {
  * Used during AI generation process
  */
 export function LoadingState({
-  message = "Generating flashcards... This may take up to 60 seconds.",
+  message = "Generowanie fiszek... To może potrwać do 60 sekund.",
   className,
 }: LoadingStateProps) {
   return (
@@ -35,7 +35,7 @@ export function LoadingState({
         {message}
       </p>
       <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
-        Please wait while our AI processes your text...
+        Proszę czekać, nasze AI przetwarza Twój tekst...
       </p>
     </div>
   );
