@@ -3,9 +3,9 @@ description:
 globs: 
 alwaysApply: true
 ---
-# AI Rules for {app-name}
+# AI Rules for natigo
 
-{project-description}
+Natigo is a web application that enables the automatic generation of flashcards using artifical intelligence.The aim of project is to significantly speed up and simplify the process of creating fiches, enabling users to quickly transform the text they enter (copy-paste) into high-quality flashcards for learning.
 
 ## Tech Stack
 

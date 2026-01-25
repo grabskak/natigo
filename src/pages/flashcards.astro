@@ -1,0 +1,72 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import FlashcardsView from '@/components/flashcards/FlashcardsView';
+import type { FlashcardsFilters } from '@/types';
+
+// ============================================================================
+// Authorization check
+// ============================================================================
+
+// TODO: Uncomment when login page is ready
+// const { data: { session } } = await Astro.locals.supabase.auth.getSession();
+// if (!session) {
+//   return Astro.redirect('/login');
+// }
+
+// TEMPORARY: Skip auth for testing
+console.log('⚠️ Auth check temporarily disabled for testing')
+
+// ============================================================================
+// Parse query parameters from URL
+// ============================================================================
+
+const url = new URL(Astro.request.url);
+const searchParams = url.searchParams;
+
+// Page number (default: 1)
+const pageParam = searchParams.get('page');
+const initialPage = pageParam ? parseInt(pageParam, 10) : 1;
+
+// Source filter (default: 'all')
+const sourceParam = searchParams.get('source');
+const validSources = ['manual', 'ai-full', 'ai-edited'];
+const initialSource = sourceParam && validSources.includes(sourceParam) 
+  ? (sourceParam as 'manual' | 'ai-full' | 'ai-edited')
+  : 'all';
+
+// Sort field (default: 'created_at')
+const sortParam = searchParams.get('sort');
+const validSortFields = ['created_at', 'updated_at'];
+const initialSort = sortParam && validSortFields.includes(sortParam)
+  ? (sortParam as 'created_at' | 'updated_at')
+  : 'created_at';
+
+// Sort order (default: 'desc')
+const orderParam = searchParams.get('order');
+const validOrders = ['asc', 'desc'];
+const initialOrder = orderParam && validOrders.includes(orderParam)
+  ? (orderParam as 'asc' | 'desc')
+  : 'desc';
+
+// Construct initial filters
+const initialFilters: FlashcardsFilters = {
+  source: initialSource,
+  sort: initialSort,
+  order: initialOrder,
+};
+
+// ============================================================================
+// Page metadata
+// ============================================================================
+
+const pageTitle = 'My Flashcards | Natigo';
+const pageDescription = 'Browse, manage, and edit your flashcards';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <FlashcardsView 
+    client:load 
+    initialPage={initialPage} 
+    initialFilters={initialFilters} 
+  />
+</Layout>
