@@ -234,7 +234,7 @@ export function CandidateCard({
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
               Przód
             </label>
-            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700">
+            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700" data-testid={`candidate-front-${sequenceNumber}`}>
               {displayFront}
             </div>
           </div>
@@ -244,7 +244,7 @@ export function CandidateCard({
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
               Tył
             </label>
-            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700 whitespace-pre-wrap">
+            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700 whitespace-pre-wrap" data-testid={`candidate-back-${sequenceNumber}`}>
               {displayBack}
             </div>
           </div>

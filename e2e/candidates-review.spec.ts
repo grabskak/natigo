@@ -6,10 +6,10 @@
  */
 
 import { test, expect } from "./fixtures";
-import { generateText } from "./helpers";
 
 test.describe("Review - Display & Navigation", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -63,6 +63,7 @@ test.describe("Review - Display & Navigation", () => {
 
 test.describe("Review - Accept Candidates", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -136,6 +137,7 @@ test.describe("Review - Accept Candidates", () => {
 
 test.describe("Review - Edit Candidates", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -144,7 +146,8 @@ test.describe("Review - Edit Candidates", () => {
     await candidatesReviewPage.waitForReady();
 
     // Click edit button
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
 
     // Should enter edit mode
     const isInEditMode = await candidatesReviewPage.isInEditMode(1);
@@ -161,12 +164,9 @@ test.describe("Review - Edit Candidates", () => {
   test("edit candidate content", async ({ candidatesReviewPage }) => {
     await candidatesReviewPage.waitForReady();
 
-    // Get original values
-    const originalFront = await candidatesReviewPage.getCandidateFrontValue(1);
-    const originalBack = await candidatesReviewPage.getCandidateBackValue(1);
-
     // Enter edit mode
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
 
     // Change values
     const newFront = "Edited Front Text";
@@ -201,7 +201,8 @@ test.describe("Review - Edit Candidates", () => {
     const originalStatus = await candidatesReviewPage.getCandidateStatus(1);
 
     // Enter edit mode and change values
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
     await candidatesReviewPage.fillCandidateFront(1, "Changed");
     await candidatesReviewPage.fillCandidateBack(1, "Changed");
 
@@ -218,7 +219,7 @@ test.describe("Review - Edit Candidates", () => {
     expect(restoredFront).toBe(originalFront);
     expect(restoredBack).toBe(originalBack);
 
-    // Status should be unchanged
+    // Status should be unchanged - verify it matches the original
     const status = await candidatesReviewPage.getCandidateStatus(1);
     expect(status).toBe(originalStatus);
   });
@@ -230,7 +231,8 @@ test.describe("Review - Edit Candidates", () => {
     expect(await candidatesReviewPage.getCandidateStatus(1)).toBe("pending");
 
     // Edit and save
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
     await candidatesReviewPage.fillCandidateFront(1, "New Front");
     await candidatesReviewPage.saveEdit(1);
 
@@ -249,7 +251,8 @@ test.describe("Review - Edit Candidates", () => {
     expect(await candidatesReviewPage.getCandidateStatus(1)).toBe("accepted");
 
     // Then edit
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
     await candidatesReviewPage.fillCandidateFront(1, "Modified");
     await candidatesReviewPage.saveEdit(1);
 
@@ -261,6 +264,7 @@ test.describe("Review - Edit Candidates", () => {
 
 test.describe("Review - Reject Candidates", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -319,6 +323,7 @@ test.describe("Review - Reject Candidates", () => {
 
 test.describe("Review - Save Accepted Flashcards", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -347,7 +352,6 @@ test.describe("Review - Save Accepted Flashcards", () => {
 
     // Get content of first candidate
     const frontText = await candidatesReviewPage.getCandidateFrontValue(1);
-    const backText = await candidatesReviewPage.getCandidateBackValue(1);
 
     // Accept and save
     await candidatesReviewPage.acceptCandidate(1);
@@ -358,9 +362,9 @@ test.describe("Review - Save Accepted Flashcards", () => {
     const flashcardCount = await flashcardsPage.getFlashcardCount();
     expect(flashcardCount).toBeGreaterThan(0);
 
-    // Find the saved flashcard
+    // Find the saved flashcard - check partial match
     const pageContent = await flashcardsPage.page.textContent("body");
-    expect(pageContent).toContain(frontText.substring(0, 20)); // Check partial match
+    expect(pageContent).toContain(frontText.substring(0, 20));
   });
 
   test("cancel button discards all changes", async ({ candidatesReviewPage, flashcardsPage }) => {
@@ -402,6 +406,7 @@ test.describe("Review - Save Accepted Flashcards", () => {
 
 test.describe("Review - Error Handling", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -448,6 +453,7 @@ test.describe("Review - Error Handling", () => {
 
 test.describe("Review - Edge Cases", () => {
   test.beforeEach(async ({ generatePage, longText }) => {
+    await generatePage.goto();
     await generatePage.generate(longText);
     await generatePage.waitForGenerationComplete();
   });
@@ -456,7 +462,8 @@ test.describe("Review - Edge Cases", () => {
     await candidatesReviewPage.waitForReady();
 
     // Edit with very long text
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
     const longFront = "A".repeat(500);
     const longBack = "B".repeat(2000);
     await candidatesReviewPage.fillCandidateFront(1, longFront);
@@ -472,7 +479,8 @@ test.describe("Review - Edge Cases", () => {
     await candidatesReviewPage.waitForReady();
 
     // Try to save empty content
-    await candidatesReviewPage.editCandidate(1);
+    const card = candidatesReviewPage.getCandidateCard(1);
+    await card.startEdit();
     await candidatesReviewPage.fillCandidateFront(1, "");
     await candidatesReviewPage.fillCandidateBack(1, "");
 
