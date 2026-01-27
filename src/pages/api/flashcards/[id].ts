@@ -101,7 +101,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       // Generic error from service
       throw serviceError;
     }
-  } catch (error) {
+  } catch {
     // Generic server error (500)
     //console.error("Unexpected error in PUT /api/flashcards/:id:", error);
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred while updating flashcard");
@@ -165,7 +165,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       // Generic error from service
       throw serviceError;
     }
-  } catch (error) {
+  } catch {
     // Generic server error (500)
     // console.error("Unexpected error in DELETE /api/flashcards/:id:", error);
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred while deleting flashcard");
