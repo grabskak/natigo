@@ -64,9 +64,9 @@ $ npm install   # or pnpm install
 
 # 3. Configure environment variables
 $ cp .env.example .env
-# 👉  Fill in SUPABASE_URL, SUPABASE_ANON_KEY, OPENROUTER_API_KEY …
+# 👉  Fill in SUPABASE_URL, SUPABASE_PUBLIC_KEY, OPENROUTER_API_KEY …
 
-# 4. Start the dev server
+
 $ npm run dev
 # open http://localhost:4321
 ```
