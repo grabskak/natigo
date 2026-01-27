@@ -41,4 +41,3 @@ export const UpdatePasswordSchema = z
     message: "Passwords do not match.",
     path: ["confirmPassword"],
   });
-

@@ -143,7 +143,7 @@ export class FlashcardsPage {
   async getAllFlashcardIds(): Promise<string[]> {
     const cards = await this.getAllFlashcardCards().all();
     const ids: string[] = [];
-    
+
     for (const card of cards) {
       const testId = await card.getAttribute("data-testid");
       if (testId) {
@@ -154,7 +154,7 @@ export class FlashcardsPage {
         }
       }
     }
-    
+
     return ids;
   }
 

@@ -71,7 +71,7 @@ export const onRequest = defineMiddleware(async (context: APIContext, next) => {
     try {
       await supabase.auth.signOut();
     } catch (signOutError) {
-      console.error("Middleware: failed to sign out unconfirmed session:", signOutError);
+      // console.error("Middleware: failed to sign out unconfirmed session:", signOutError);
     }
     effectiveUser = null;
   }

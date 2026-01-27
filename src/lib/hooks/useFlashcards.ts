@@ -3,9 +3,9 @@
  * Handles fetching, pagination, filtering, CRUD operations, and URL synchronization
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
-import { FlashcardsApiService } from '@/lib/services/flashcards-api.service';
+import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import { FlashcardsApiService } from "@/lib/services/flashcards-api.service";
 import type {
   FlashcardDto,
   FlashcardsFilters,
@@ -15,7 +15,7 @@ import type {
   FlashcardFormData,
   ApiError,
   ListFlashcardsQuery,
-} from '@/types';
+} from "@/types";
 
 // ============================================================================
 // Hook Interface
@@ -26,29 +26,29 @@ export interface UseFlashcardsReturn {
   flashcards: FlashcardDto[];
   isLoading: boolean;
   error: ApiError | null;
-  
+
   // Pagination
   pagination: PaginationState;
   goToPage: (page: number) => void;
-  
+
   // Filters
   filters: FlashcardsFilters;
   updateFilters: (filters: Partial<FlashcardsFilters>) => void;
   clearFilters: () => void;
-  
+
   // Modal operations
   modalState: FlashcardModalState;
   openAddModal: () => void;
   openEditModal: (flashcard: FlashcardDto) => void;
   closeModal: () => void;
   submitModal: (data: FlashcardFormData) => Promise<void>;
-  
+
   // Delete operations
   deleteDialogState: DeleteDialogState;
   openDeleteDialog: (flashcardId: string) => void;
   closeDeleteDialog: () => void;
   confirmDelete: () => Promise<void>;
-  
+
   // Refresh
   refetch: () => Promise<void>;
 }
@@ -57,10 +57,7 @@ export interface UseFlashcardsReturn {
 // Hook Implementation
 // ============================================================================
 
-export function useFlashcards(
-  initialPage: number = 1,
-  initialFilters: Partial<FlashcardsFilters> = {}
-): UseFlashcardsReturn {
+export function useFlashcards(initialPage = 1, initialFilters: Partial<FlashcardsFilters> = {}): UseFlashcardsReturn {
   // ========================================================================
   // State Management
   // ========================================================================
@@ -77,16 +74,16 @@ export function useFlashcards(
   });
 
   const [filters, setFilters] = useState<FlashcardsFilters>({
-    source: initialFilters.source || 'all',
-    sort: initialFilters.sort || 'created_at',
-    order: initialFilters.order || 'desc',
+    source: initialFilters.source || "all",
+    sort: initialFilters.sort || "created_at",
+    order: initialFilters.order || "desc",
   });
 
   const [modalState, setModalState] = useState<FlashcardModalState>({
     isOpen: false,
-    mode: 'add',
+    mode: "add",
     flashcard: null,
-    formData: { front: '', back: '' },
+    formData: { front: "", back: "" },
     validation: {
       front: { isValid: true, message: null },
       back: { isValid: true, message: null },
@@ -119,7 +116,7 @@ export function useFlashcards(
       };
 
       // Add source filter only if not 'all'
-      if (filters.source !== 'all') {
+      if (filters.source !== "all") {
         query.source = filters.source;
       }
 
@@ -132,9 +129,9 @@ export function useFlashcards(
         totalPages: response.pagination.total_pages,
       }));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load flashcards';
+      const errorMessage = err instanceof Error ? err.message : "Failed to load flashcards";
       setError({
-        code: 'FETCH_ERROR',
+        code: "FETCH_ERROR",
         message: errorMessage,
       });
       toast.error(errorMessage);
@@ -156,9 +153,9 @@ export function useFlashcards(
       ...prev,
       currentPage: page,
     }));
-    
+
     // Scroll to top of page
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   // ========================================================================
@@ -170,7 +167,7 @@ export function useFlashcards(
       ...prev,
       ...newFilters,
     }));
-    
+
     // Reset to page 1 when filters change
     setPagination((prev) => ({
       ...prev,
@@ -180,11 +177,11 @@ export function useFlashcards(
 
   const clearFilters = useCallback(() => {
     setFilters({
-      source: 'all',
-      sort: 'created_at',
-      order: 'desc',
+      source: "all",
+      sort: "created_at",
+      order: "desc",
     });
-    
+
     // Reset to page 1
     setPagination((prev) => ({
       ...prev,
@@ -199,9 +196,9 @@ export function useFlashcards(
   const openAddModal = useCallback(() => {
     setModalState({
       isOpen: true,
-      mode: 'add',
+      mode: "add",
       flashcard: null,
-      formData: { front: '', back: '' },
+      formData: { front: "", back: "" },
       validation: {
         front: { isValid: true, message: null },
         back: { isValid: true, message: null },
@@ -214,7 +211,7 @@ export function useFlashcards(
   const openEditModal = useCallback((flashcard: FlashcardDto) => {
     setModalState({
       isOpen: true,
-      mode: 'edit',
+      mode: "edit",
       flashcard,
       formData: {
         front: flashcard.front,
@@ -241,22 +238,22 @@ export function useFlashcards(
       setModalState((prev) => ({ ...prev, isSubmitting: true, error: null }));
 
       try {
-        if (modalState.mode === 'add') {
+        if (modalState.mode === "add") {
           await FlashcardsApiService.create(data);
-          toast.success('Flashcard created successfully');
-        } else if (modalState.mode === 'edit' && modalState.flashcard) {
+          toast.success("Flashcard created successfully");
+        } else if (modalState.mode === "edit" && modalState.flashcard) {
           await FlashcardsApiService.update(modalState.flashcard.id, data);
-          toast.success('Flashcard updated successfully');
+          toast.success("Flashcard updated successfully");
         }
 
         closeModal();
         await refetch();
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to save flashcard';
+        const errorMessage = err instanceof Error ? err.message : "Failed to save flashcard";
         setModalState((prev) => ({
           ...prev,
           error: {
-            code: 'SUBMIT_ERROR',
+            code: "SUBMIT_ERROR",
             message: errorMessage,
           },
         }));
@@ -297,7 +294,7 @@ export function useFlashcards(
 
     try {
       await FlashcardsApiService.delete(deleteDialogState.flashcardId);
-      toast.success('Flashcard deleted');
+      toast.success("Flashcard deleted");
 
       closeDeleteDialog();
 
@@ -309,12 +306,12 @@ export function useFlashcards(
         await refetch();
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete flashcard';
+      const errorMessage = err instanceof Error ? err.message : "Failed to delete flashcard";
       toast.error(errorMessage);
       setDeleteDialogState((prev) => ({
         ...prev,
         error: {
-          code: 'DELETE_ERROR',
+          code: "DELETE_ERROR",
           message: errorMessage,
         },
       }));
@@ -335,26 +332,26 @@ export function useFlashcards(
   // Synchronize URL with filters and pagination
   useEffect(() => {
     const params = new URLSearchParams();
-    
+
     // Always set page
-    params.set('page', pagination.currentPage.toString());
-    
+    params.set("page", pagination.currentPage.toString());
+
     // Only set non-default values
-    if (filters.source !== 'all') {
-      params.set('source', filters.source);
+    if (filters.source !== "all") {
+      params.set("source", filters.source);
     }
-    
-    if (filters.sort !== 'created_at') {
-      params.set('sort', filters.sort);
+
+    if (filters.sort !== "created_at") {
+      params.set("sort", filters.sort);
     }
-    
-    if (filters.order !== 'desc') {
-      params.set('order', filters.order);
+
+    if (filters.order !== "desc") {
+      params.set("order", filters.order);
     }
 
     // Update URL without reload
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState(null, '', newUrl);
+    window.history.replaceState(null, "", newUrl);
   }, [pagination.currentPage, filters]);
 
   // Handle edge case: current page > total pages
@@ -373,29 +370,29 @@ export function useFlashcards(
     flashcards,
     isLoading,
     error,
-    
+
     // Pagination
     pagination,
     goToPage,
-    
+
     // Filters
     filters,
     updateFilters,
     clearFilters,
-    
+
     // Modal operations
     modalState,
     openAddModal,
     openEditModal,
     closeModal,
     submitModal,
-    
+
     // Delete operations
     deleteDialogState,
     openDeleteDialog,
     closeDeleteDialog,
     confirmDelete,
-    
+
     // Refresh
     refetch,
   };

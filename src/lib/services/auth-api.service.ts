@@ -1,5 +1,3 @@
-import type { ErrorResponse } from "@/types";
-
 export type AuthApiErrorCode =
   | "VALIDATION_FAILED"
   | "INVALID_CREDENTIALS"
@@ -85,27 +83,20 @@ async function postJson<TResponse>(
     }
   } catch (error) {
     if (error instanceof TypeError) {
-      throw new AuthApiError(
-        "NETWORK_ERROR",
-        "Network error. Please check your connection and try again."
-      );
+      throw new AuthApiError("NETWORK_ERROR", "Network error. Please check your connection and try again.");
     }
     throw error;
   }
 }
 
-export class AuthApiService {
-  static async login(input: { email: string; password: string; next?: string }) {
+const AuthApiService = {
+  async login(input: { email: string; password: string; next?: string }) {
     const { response, data } = await postJson<unknown>("/api/auth/login", input);
 
     if (response.ok) return data;
 
     if (response.status === 404) {
-      throw new AuthApiError(
-        "NOT_IMPLEMENTED",
-        "Authentication endpoint is not available yet.",
-        404
-      );
+      throw new AuthApiError("NOT_IMPLEMENTED", "Authentication endpoint is not available yet.", 404);
     }
 
     if (response.status === 401) {
@@ -119,34 +110,21 @@ export class AuthApiService {
       err.message || "Login failed. Please try again later.",
       response.status
     );
-  }
+  },
 
-  static async register(input: {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    next?: string;
-  }) {
+  async register(input: { email: string; password: string; confirmPassword: string; next?: string }) {
     const { response, data } = await postJson<unknown>("/api/auth/register", input);
 
     if (response.ok) return data;
 
     if (response.status === 404) {
-      throw new AuthApiError(
-        "NOT_IMPLEMENTED",
-        "Authentication endpoint is not available yet.",
-        404
-      );
+      throw new AuthApiError("NOT_IMPLEMENTED", "Authentication endpoint is not available yet.", 404);
     }
 
     const err = await readErrorResponse(response);
 
     if (response.status === 409) {
-      throw new AuthApiError(
-        "EMAIL_ALREADY_IN_USE",
-        err.message || "This email is already registered.",
-        409
-      );
+      throw new AuthApiError("EMAIL_ALREADY_IN_USE", err.message || "This email is already registered.", 409);
     }
 
     throw new AuthApiError(
@@ -154,19 +132,15 @@ export class AuthApiService {
       err.message || "Registration failed. Please try again later.",
       response.status
     );
-  }
+  },
 
-  static async resetPassword(input: { email: string }) {
+  async resetPassword(input: { email: string }) {
     const { response, data } = await postJson<unknown>("/api/auth/reset-password", input);
 
     if (response.ok) return data;
 
     if (response.status === 404) {
-      throw new AuthApiError(
-        "NOT_IMPLEMENTED",
-        "Authentication endpoint is not available yet.",
-        404
-      );
+      throw new AuthApiError("NOT_IMPLEMENTED", "Authentication endpoint is not available yet.", 404);
     }
 
     const err = await readErrorResponse(response);
@@ -175,19 +149,15 @@ export class AuthApiService {
       err.message || "Request failed. Please try again later.",
       response.status
     );
-  }
+  },
 
-  static async updatePassword(input: { password: string; confirmPassword: string }) {
+  async updatePassword(input: { password: string; confirmPassword: string }) {
     const { response, data } = await postJson<unknown>("/api/auth/update-password", input);
 
     if (response.ok) return data;
 
     if (response.status === 404) {
-      throw new AuthApiError(
-        "NOT_IMPLEMENTED",
-        "Authentication endpoint is not available yet.",
-        404
-      );
+      throw new AuthApiError("NOT_IMPLEMENTED", "Authentication endpoint is not available yet.", 404);
     }
 
     const err = await readErrorResponse(response);
@@ -205,9 +175,9 @@ export class AuthApiService {
       err.message || "Update failed. Please try again later.",
       response.status
     );
-  }
+  },
 
-  static async logout() {
+  async logout() {
     try {
       const response = await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
       if (response.ok) return;
@@ -221,6 +191,7 @@ export class AuthApiService {
       }
       throw error;
     }
-  }
-}
+  },
+};
 
+export { AuthApiService };

@@ -198,7 +198,11 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
           link w wiadomości (sprawdź też spam), a następnie zaloguj się.
         </p>
         <div className="flex flex-col gap-2">
-          <a href={loginHref} className="text-sm text-primary underline-offset-4 hover:underline" data-testid="auth-go-to-login-link">
+          <a
+            href={loginHref}
+            className="text-sm text-primary underline-offset-4 hover:underline"
+            data-testid="auth-go-to-login-link"
+          >
             Przejdź do logowania
           </a>
           <button
@@ -228,7 +232,11 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
           aria-invalid={emailError ? "true" : "false"}
           data-testid="auth-email-input"
         />
-        {emailError ? <p className="text-sm text-destructive" data-testid="auth-email-error">{emailError}</p> : null}
+        {emailError ? (
+          <p className="text-sm text-destructive" data-testid="auth-email-error">
+            {emailError}
+          </p>
+        ) : null}
       </div>
 
       <div className="space-y-2">
@@ -249,7 +257,11 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
           aria-invalid={passwordError ? "true" : "false"}
           data-testid="auth-password-input"
         />
-        {passwordError ? <p className="text-sm text-destructive" data-testid="auth-password-error">{passwordError}</p> : null}
+        {passwordError ? (
+          <p className="text-sm text-destructive" data-testid="auth-password-error">
+            {passwordError}
+          </p>
+        ) : null}
       </div>
 
       {mode === "register" ? (
@@ -264,11 +276,19 @@ export function AuthForm({ initialMode = "login", next, prefillEmail }: AuthForm
             aria-invalid={confirmPasswordError ? "true" : "false"}
             data-testid="auth-confirm-password-input"
           />
-          {confirmPasswordError ? <p className="text-sm text-destructive" data-testid="auth-confirm-password-error">{confirmPasswordError}</p> : null}
+          {confirmPasswordError ? (
+            <p className="text-sm text-destructive" data-testid="auth-confirm-password-error">
+              {confirmPasswordError}
+            </p>
+          ) : null}
         </div>
       ) : null}
 
-      {formError ? <p className="text-sm text-destructive" data-testid="auth-form-error">{formError}</p> : null}
+      {formError ? (
+        <p className="text-sm text-destructive" data-testid="auth-form-error">
+          {formError}
+        </p>
+      ) : null}
 
       <Button type="submit" className="w-full" disabled={isSubmitting} data-testid="auth-submit-button">
         {isSubmitting ? (

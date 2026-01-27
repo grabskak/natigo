@@ -220,7 +220,10 @@ export function CandidateCard({
     >
       {/* Header: Sequential Badge + Status Badge */}
       <div className="flex items-center justify-between mb-4">
-        <span className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400" data-testid={`candidate-number-${sequenceNumber}`}>
+        <span
+          className="inline-flex items-center px-3 py-1 rounded-md text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400"
+          data-testid={`candidate-number-${sequenceNumber}`}
+        >
           #{sequenceNumber}
         </span>
         {getStatusBadge()}
@@ -231,20 +234,22 @@ export function CandidateCard({
         <div className="space-y-4">
           {/* Front */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-              Przód
-            </label>
-            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700">
+            <p className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Przód</p>
+            <div
+              className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700"
+              data-testid={`candidate-front-${sequenceNumber}`}
+            >
               {displayFront}
             </div>
           </div>
 
           {/* Back */}
           <div>
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-              Tył
-            </label>
-            <div className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700 whitespace-pre-wrap">
+            <p className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Tył</p>
+            <div
+              className="text-sm text-gray-900 dark:text-gray-100 p-3 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700 whitespace-pre-wrap"
+              data-testid={`candidate-back-${sequenceNumber}`}
+            >
               {displayBack}
             </div>
           </div>
@@ -263,11 +268,7 @@ export function CandidateCard({
               >
                 Przód
               </label>
-              <CharacterCounter
-                current={localFront.trim().length}
-                max={FRONT_MAX}
-                min={1}
-              />
+              <CharacterCounter current={localFront.trim().length} max={FRONT_MAX} min={1} />
             </div>
             <input
               id={`front-${sequenceNumber}`}
@@ -304,21 +305,14 @@ export function CandidateCard({
               >
                 Tył
               </label>
-              <CharacterCounter
-                current={localBack.trim().length}
-                max={BACK_MAX}
-                min={1}
-              />
+              <CharacterCounter current={localBack.trim().length} max={BACK_MAX} min={1} />
             </div>
             <Textarea
               id={`back-${sequenceNumber}`}
               value={localBack}
               onChange={handleBackChange}
               rows={4}
-              className={cn(
-                "resize-none text-sm",
-                !backValidation.isValid && "border-red-500 dark:border-red-400"
-              )}
+              className={cn("resize-none text-sm", !backValidation.isValid && "border-red-500 dark:border-red-400")}
               aria-invalid={!backValidation.isValid}
               aria-describedby={backValidation.message ? `back-error-${sequenceNumber}` : undefined}
               data-testid={`candidate-back-textarea-${sequenceNumber}`}
@@ -340,13 +334,28 @@ export function CandidateCard({
       <div className="flex gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
         {!isEditing && decision === "pending" && (
           <>
-            <Button size="sm" onClick={onAccept} variant="default" data-testid={`candidate-accept-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={onAccept}
+              variant="default"
+              data-testid={`candidate-accept-button-${sequenceNumber}`}
+            >
               Akceptuj
             </Button>
-            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={handleStartEdit}
+              variant="outline"
+              data-testid={`candidate-edit-button-${sequenceNumber}`}
+            >
               Edytuj
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={onReject}
+              variant="destructive"
+              data-testid={`candidate-reject-button-${sequenceNumber}`}
+            >
               Odrzuć
             </Button>
           </>
@@ -354,10 +363,20 @@ export function CandidateCard({
 
         {!isEditing && decision === "accepted" && (
           <>
-            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={handleStartEdit}
+              variant="outline"
+              data-testid={`candidate-edit-button-${sequenceNumber}`}
+            >
               Edytuj
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={onReject}
+              variant="destructive"
+              data-testid={`candidate-reject-button-${sequenceNumber}`}
+            >
               Odrzuć
             </Button>
           </>
@@ -365,10 +384,20 @@ export function CandidateCard({
 
         {!isEditing && decision === "edited" && (
           <>
-            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={handleStartEdit}
+              variant="outline"
+              data-testid={`candidate-edit-button-${sequenceNumber}`}
+            >
               Edytuj ponownie
             </Button>
-            <Button size="sm" onClick={onReject} variant="destructive" data-testid={`candidate-reject-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={onReject}
+              variant="destructive"
+              data-testid={`candidate-reject-button-${sequenceNumber}`}
+            >
               Odrzuć
             </Button>
           </>
@@ -376,10 +405,20 @@ export function CandidateCard({
 
         {!isEditing && decision === "rejected" && (
           <>
-            <Button size="sm" onClick={onAccept} variant="default" data-testid={`candidate-accept-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={onAccept}
+              variant="default"
+              data-testid={`candidate-accept-button-${sequenceNumber}`}
+            >
               Akceptuj
             </Button>
-            <Button size="sm" onClick={handleStartEdit} variant="outline" data-testid={`candidate-edit-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={handleStartEdit}
+              variant="outline"
+              data-testid={`candidate-edit-button-${sequenceNumber}`}
+            >
               Edytuj
             </Button>
           </>
@@ -396,7 +435,12 @@ export function CandidateCard({
             >
               Zapisz edycję
             </Button>
-            <Button size="sm" onClick={handleCancelEdit} variant="outline" data-testid={`candidate-cancel-edit-button-${sequenceNumber}`}>
+            <Button
+              size="sm"
+              onClick={handleCancelEdit}
+              variant="outline"
+              data-testid={`candidate-cancel-edit-button-${sequenceNumber}`}
+            >
               Anuluj
             </Button>
           </>

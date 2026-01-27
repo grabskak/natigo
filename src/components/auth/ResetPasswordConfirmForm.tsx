@@ -111,19 +111,14 @@ export function ResetPasswordConfirmForm() {
           autoComplete="new-password"
           aria-invalid={confirmPasswordError ? "true" : "false"}
         />
-        {confirmPasswordError ? (
-          <p className="text-sm text-destructive">{confirmPasswordError}</p>
-        ) : null}
+        {confirmPasswordError ? <p className="text-sm text-destructive">{confirmPasswordError}</p> : null}
       </div>
 
       {formError ? (
         <div className="space-y-2">
           <p className="text-sm text-destructive">{formError}</p>
           {showRequestNewLinkCta ? (
-            <a
-              href="/reset-password"
-              className="inline-block text-sm text-primary underline-offset-4 hover:underline"
-            >
+            <a href="/reset-password" className="inline-block text-sm text-primary underline-offset-4 hover:underline">
               Poproś o nowy link
             </a>
           ) : null}
@@ -149,4 +144,3 @@ export function ResetPasswordConfirmForm() {
     </form>
   );
 }
-

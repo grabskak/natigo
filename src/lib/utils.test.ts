@@ -8,7 +8,8 @@ describe("cn utility function", () => {
   });
 
   it("should handle conditional classes", () => {
-    const result = cn("text-red-500", false && "bg-blue-500", "p-4");
+    const shouldApply = false;
+    const result = cn("text-red-500", shouldApply && "bg-blue-500", "p-4");
     expect(result).toBe("text-red-500 p-4");
   });
 

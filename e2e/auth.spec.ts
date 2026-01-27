@@ -35,7 +35,7 @@ test.describe("Authentication - Login", () => {
     // Should show error (neutral message)
     await expect(authPage.formError).toBeVisible();
     const errorText = await authPage.getFormErrorText();
-    expect(errorText).toContain("Invalid email or password");
+    expect(errorText).toContain("Nieprawidłowy email lub hasło");
 
     // Should stay on login page
     await expect(authPage.page).toHaveURL(/\/login/);
@@ -51,7 +51,7 @@ test.describe("Authentication - Login", () => {
     // Should show error (neutral message)
     await expect(authPage.formError).toBeVisible();
     const errorText = await authPage.getFormErrorText();
-    expect(errorText).toContain("Invalid email or password");
+    expect(errorText).toContain("Nieprawidłowy email lub hasło");
   });
 
   test("validation: empty email", async ({ authPage }) => {
@@ -116,7 +116,9 @@ test.describe("Authentication - Login", () => {
 
   test("logged in user redirected from login page", async ({ authPage, testUser }) => {
     // First login
-    await authPage.login(testUser.email, testUser.password);
+    await authPage.gotoLogin();
+    await authPage.fillLoginCredentials(testUser.email, testUser.password);
+    await authPage.submit();
     await expect(authPage.page).toHaveURL("/flashcards");
 
     // Try to access login page again
@@ -246,7 +248,9 @@ test.describe("Authentication - Registration", () => {
 
   test("logged in user redirected from register page", async ({ authPage, testUser }) => {
     // First login
-    await authPage.login(testUser.email, testUser.password);
+    await authPage.gotoLogin();
+    await authPage.fillLoginCredentials(testUser.email, testUser.password);
+    await authPage.submit();
     await expect(authPage.page).toHaveURL("/flashcards");
 
     // Try to access register page
@@ -260,7 +264,9 @@ test.describe("Authentication - Registration", () => {
 test.describe("Authentication - Logout", () => {
   test("successful logout", async ({ authPage, testUser, page }) => {
     // First login
-    await authPage.login(testUser.email, testUser.password);
+    await authPage.gotoLogin();
+    await authPage.fillLoginCredentials(testUser.email, testUser.password);
+    await authPage.submit();
     await expect(page).toHaveURL("/flashcards");
 
     // TODO: Implement logout button in UI
@@ -276,7 +282,9 @@ test.describe("Authentication - Logout", () => {
 
   test("after logout, cannot access protected pages", async ({ authPage, testUser, page }) => {
     // Login
-    await authPage.login(testUser.email, testUser.password);
+    await authPage.gotoLogin();
+    await authPage.fillLoginCredentials(testUser.email, testUser.password);
+    await authPage.submit();
 
     // Logout
     await clearAuth(page);

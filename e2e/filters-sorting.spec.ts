@@ -236,8 +236,6 @@ test.describe("Flashcards - Combined Filters", () => {
     await flashcardsPage.sortBy("front");
     await flashcardsPage.waitForReady();
 
-    const urlBefore = flashcardsPage.page.url();
-
     // Navigate away
     await flashcardsPage.goToGenerate();
     await expect(generatePage.page).toHaveURL("/generations");
@@ -259,10 +257,6 @@ test.describe("Flashcards - Combined Filters", () => {
 
     // Filters should be applied
     // Verify by checking the UI state (selected options)
-    const sourceSelect = flashcardsPage.sourceFilter;
-    const sortSelect = flashcardsPage.sortFilter;
-    const orderSelect = flashcardsPage.orderFilter;
-
     // These checks depend on how the Select component exposes its value
     // Simplified check: ensure page loaded correctly
     await expect(flashcardsPage.header).toBeVisible();
@@ -385,8 +379,6 @@ test.describe("Flashcards - Search (if implemented)", () => {
     const searchInput = flashcardsPage.page.getByPlaceholder(/search|szukaj/i);
     await searchInput.fill("specific");
     await flashcardsPage.waitForReady();
-
-    const filteredCount = await flashcardsPage.getFlashcardCount();
 
     // Clear search
     await searchInput.clear();

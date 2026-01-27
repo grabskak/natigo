@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import type { ErrorResponse } from "../../../types";
 import { updateFlashcard, deleteFlashcard } from "../../../lib/services/flashcard.service";
 import { errorResponse, isValidUUID } from "../../../lib/utils/api-helpers";
 
@@ -11,17 +10,9 @@ export const prerender = false;
 // ============================================================================
 
 const UpdateFlashcardSchema = z.object({
-  front: z
-    .string()
-    .trim()
-    .min(1, "Front text cannot be empty")
-    .max(200, "Front text must not exceed 200 characters"),
+  front: z.string().trim().min(1, "Front text cannot be empty").max(200, "Front text must not exceed 200 characters"),
 
-  back: z
-    .string()
-    .trim()
-    .min(1, "Back text cannot be empty")
-    .max(500, "Back text must not exceed 500 characters"),
+  back: z.string().trim().min(1, "Back text cannot be empty").max(500, "Back text must not exceed 500 characters"),
 });
 
 type UpdateFlashcardInput = z.infer<typeof UpdateFlashcardSchema>;
@@ -68,14 +59,9 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     try {
       body = await request.json();
     } catch {
-      return errorResponse(
-        400,
-        "VALIDATION_FAILED",
-        "Invalid JSON in request body",
-        {
-          issue: "Request body must be valid JSON",
-        }
-      );
+      return errorResponse(400, "VALIDATION_FAILED", "Invalid JSON in request body", {
+        issue: "Request body must be valid JSON",
+      });
     }
 
     // Step 6: Validate request body with Zod schema
@@ -94,14 +80,9 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
 
     // Step 7: Update flashcard using service layer
     try {
-      const updatedFlashcard = await updateFlashcard(
-        supabase,
-        user.id,
-        id,
-        updateData
-      );
+      const updatedFlashcard = await updateFlashcard(supabase, user.id, id, updateData);
 
-      console.log("✅ Flashcard updated successfully:", id);
+      // console.log("✅ Flashcard updated successfully:", id);
 
       // Step 8: Return success response
       return new Response(JSON.stringify(updatedFlashcard), {
@@ -112,26 +93,18 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       // Handle service layer errors
       if (serviceError instanceof Error) {
         if (serviceError.message.includes("not found") || serviceError.message.includes("permission")) {
-          console.log("❌ Flashcard not found or doesn't belong to user:", id);
-          return errorResponse(
-            404,
-            "NOT_FOUND",
-            serviceError.message
-          );
+          // console.log("❌ Flashcard not found or doesn't belong to user:", id);
+          return errorResponse(404, "NOT_FOUND", serviceError.message);
         }
       }
-      
+
       // Generic error from service
       throw serviceError;
     }
   } catch (error) {
     // Generic server error (500)
-    console.error("Unexpected error in PUT /api/flashcards/:id:", error);
-    return errorResponse(
-      500,
-      "INTERNAL_SERVER_ERROR",
-      "An unexpected error occurred while updating flashcard"
-    );
+    //console.error("Unexpected error in PUT /api/flashcards/:id:", error);
+    return errorResponse(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred while updating flashcard");
   }
 };
 
@@ -174,7 +147,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     try {
       await deleteFlashcard(supabase, user.id, id);
 
-      console.log("✅ Flashcard deleted successfully:", id);
+      // console.log("✅ Flashcard deleted successfully:", id);
 
       // Step 6: Return 204 No Content (empty response)
       return new Response(null, {
@@ -184,25 +157,17 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       // Handle service layer errors
       if (serviceError instanceof Error) {
         if (serviceError.message.includes("not found") || serviceError.message.includes("permission")) {
-          console.log("❌ Flashcard not found or doesn't belong to user:", id);
-          return errorResponse(
-            404,
-            "NOT_FOUND",
-            serviceError.message
-          );
+          // console.log("❌ Flashcard not found or doesn't belong to user:", id);
+          return errorResponse(404, "NOT_FOUND", serviceError.message);
         }
       }
-      
+
       // Generic error from service
       throw serviceError;
     }
   } catch (error) {
     // Generic server error (500)
-    console.error("Unexpected error in DELETE /api/flashcards/:id:", error);
-    return errorResponse(
-      500,
-      "INTERNAL_SERVER_ERROR",
-      "An unexpected error occurred while deleting flashcard"
-    );
+    // console.error("Unexpected error in DELETE /api/flashcards/:id:", error);
+    return errorResponse(500, "INTERNAL_SERVER_ERROR", "An unexpected error occurred while deleting flashcard");
   }
 };

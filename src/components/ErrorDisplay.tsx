@@ -17,12 +17,7 @@ interface ErrorDisplayProps {
  * Error display component with retry and back-to-form actions
  * Shows appropriate error messages based on error code
  */
-export function ErrorDisplay({
-  error,
-  onRetry,
-  onBackToForm,
-  className,
-}: ErrorDisplayProps) {
+export function ErrorDisplay({ error, onRetry, onBackToForm, className }: ErrorDisplayProps) {
   // Determine if retry is available based on error code
   const canRetry =
     error.code === "AI_SERVICE_ERROR" ||
@@ -55,7 +50,11 @@ export function ErrorDisplay({
     if (!error.details) return null;
 
     // Rate limit details
-    if (error.code === "RATE_LIMIT_EXCEEDED" && typeof error.details === "object" && "retry_after_seconds" in error.details) {
+    if (
+      error.code === "RATE_LIMIT_EXCEEDED" &&
+      typeof error.details === "object" &&
+      "retry_after_seconds" in error.details
+    ) {
       return `Spróbuj ponownie za ${error.details.retry_after_seconds} sekund.`;
     }
 
@@ -64,10 +63,7 @@ export function ErrorDisplay({
 
   return (
     <div
-      className={cn(
-        "flex flex-col items-center justify-center py-12 px-4",
-        className
-      )}
+      className={cn("flex flex-col items-center justify-center py-12 px-4", className)}
       role="alert"
       aria-live="assertive"
     >
@@ -90,20 +86,14 @@ export function ErrorDisplay({
       </div>
 
       {/* Error Title */}
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 text-center">
-        {getErrorTitle()}
-      </h2>
+      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 text-center">{getErrorTitle()}</h2>
 
       {/* Error Message */}
-      <p className="text-base text-gray-700 dark:text-gray-300 mb-2 text-center max-w-md">
-        {error.message}
-      </p>
+      <p className="text-base text-gray-700 dark:text-gray-300 mb-2 text-center max-w-md">{error.message}</p>
 
       {/* Additional Details */}
       {getErrorDetails() && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">
-          {getErrorDetails()}
-        </p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">{getErrorDetails()}</p>
       )}
 
       {/* Action Buttons */}

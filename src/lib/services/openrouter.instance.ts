@@ -21,7 +21,7 @@ function createOpenRouterService(): OpenRouterService {
   if (!apiKey || apiKey === "mock") {
     throw new OpenRouterConfigError(
       "OpenRouter API key nie jest skonfigurowany lub działa w trybie mock. " +
-        "Ustaw zmienną OPENROUTER_API_KEY aby korzystać z prawdziwego API.",
+        "Ustaw zmienną OPENROUTER_API_KEY aby korzystać z prawdziwego API."
     );
   }
 

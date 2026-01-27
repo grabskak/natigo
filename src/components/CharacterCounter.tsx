@@ -17,12 +17,7 @@ interface CharacterCounterProps {
  * - Green: within valid range
  * - Red: above maximum
  */
-export function CharacterCounter({
-  current,
-  max,
-  min = 0,
-  className,
-}: CharacterCounterProps) {
+export function CharacterCounter({ current, max, min = 0, className }: CharacterCounterProps) {
   // Determine color based on current count
   const getColorClass = () => {
     if (current > max) {

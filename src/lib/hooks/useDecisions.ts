@@ -16,7 +16,7 @@ export function useDecisions(totalCandidates: number) {
       const next = new Map(prev);
       next.set(candidateIndex, {
         candidateIndex,
-        state: 'accepted',
+        state: "accepted",
         editedContent: undefined,
       });
       return next;
@@ -31,7 +31,7 @@ export function useDecisions(totalCandidates: number) {
       const next = new Map(prev);
       next.set(candidateIndex, {
         candidateIndex,
-        state: 'rejected',
+        state: "rejected",
         editedContent: undefined,
       });
       return next;
@@ -46,7 +46,7 @@ export function useDecisions(totalCandidates: number) {
       const next = new Map(prev);
       next.set(candidateIndex, {
         candidateIndex,
-        state: 'edited',
+        state: "edited",
         editedContent: { front, back },
       });
       return next;
@@ -67,17 +67,23 @@ export function useDecisions(totalCandidates: number) {
   /**
    * Get decision for a specific candidate
    */
-  const getDecision = useCallback((candidateIndex: number): CandidateDecision | undefined => {
-    return decisions.get(candidateIndex);
-  }, [decisions]);
+  const getDecision = useCallback(
+    (candidateIndex: number): CandidateDecision | undefined => {
+      return decisions.get(candidateIndex);
+    },
+    [decisions]
+  );
 
   /**
    * Get state for a specific candidate
    */
-  const getState = useCallback((candidateIndex: number): CandidateDecisionState => {
-    const decision = decisions.get(candidateIndex);
-    return decision?.state || 'pending';
-  }, [decisions]);
+  const getState = useCallback(
+    (candidateIndex: number): CandidateDecisionState => {
+      const decision = decisions.get(candidateIndex);
+      return decision?.state || "pending";
+    },
+    [decisions]
+  );
 
   /**
    * Get statistics about all decisions

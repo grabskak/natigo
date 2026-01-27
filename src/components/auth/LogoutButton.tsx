@@ -38,4 +38,3 @@ export function LogoutButton({ redirectTo = "/login" }: LogoutButtonProps) {
     </Button>
   );
 }
-

@@ -24,19 +24,29 @@ Object.defineProperty(window, "matchMedia", {
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
+  disconnect() {
+    // Mock implementation
+  }
+  observe() {
+    // Mock implementation
+  }
   takeRecords() {
     return [];
   }
-  unobserve() {}
+  unobserve() {
+    // Mock implementation
+  }
 } as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
+  disconnect() {
+    // Mock implementation
+  }
+  observe() {
+    // Mock implementation
+  }
+  unobserve() {
+    // Mock implementation
+  }
 } as unknown as typeof ResizeObserver;

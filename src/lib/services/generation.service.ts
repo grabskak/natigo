@@ -41,7 +41,7 @@ export async function checkRateLimit(supabase: SupabaseClient, userId: string): 
     .gte("created_at", windowStart.toISOString());
 
   if (error) {
-    console.error("Rate limit check failed:", error);
+    // console.error("Rate limit check failed:", error);
     throw new Error("Failed to check rate limit");
   }
 
@@ -101,7 +101,7 @@ export async function createGeneration(
   const { data, error } = await supabase.from("generations").insert(generationData).select("id").single();
 
   if (error || !data) {
-    console.error("Failed to create generation record:", error);
+    //console.error("Failed to create generation record:", error);
     throw new Error("Failed to save generation data");
   }
 
@@ -142,7 +142,7 @@ export async function logGenerationError(
 
   if (error) {
     // Log to console but don't throw - error logging failure shouldn't break the flow
-    console.error("Failed to log generation error:", error);
+    //console.error("Failed to log generation error:", error);
   }
 }
 
@@ -157,7 +157,7 @@ export async function logGenerationError(
  * const candidates = validateFlashcardCandidates(aiFlashcards);
  */
 export function validateFlashcardCandidates(aiFlashcards: AIFlashcard[]): FlashcardCandidateDto[] {
-  console.info(`🔍 Walidacja ${aiFlashcards.length} fiszek w generation.service...`);
+  // console.info(`🔍 Walidacja ${aiFlashcards.length} fiszek w generation.service...`);
 
   const candidates = aiFlashcards
     .map((card, index) => {
@@ -168,26 +168,26 @@ export function validateFlashcardCandidates(aiFlashcards: AIFlashcard[]): Flashc
       };
 
       // Log każdej fiszki przed filtracją
-      console.info(`   Fiszka ${index}: front=${candidate.front.length} znaków, back=${candidate.back.length} znaków`);
+      // console.info(`   Fiszka ${index}: front=${candidate.front.length} znaków, back=${candidate.back.length} znaków`);
 
       return candidate;
     })
     .filter((card, index) => {
       // Validate front length (1-200 characters)
       if (card.front.length < 1 || card.front.length > 200) {
-        console.warn(`   ❌ Fiszka ${index} odrzucona: front length ${card.front.length} (wymagane: 1-200)`);
+        //  console.warn(`   ❌ Fiszka ${index} odrzucona: front length ${card.front.length} (wymagane: 1-200)`);
         return false;
       }
       // Validate back length (1-500 characters)
       if (card.back.length < 1 || card.back.length > 500) {
-        console.warn(`   ❌ Fiszka ${index} odrzucona: back length ${card.back.length} (wymagane: 1-500)`);
+        //  console.warn(`   ❌ Fiszka ${index} odrzucona: back length ${card.back.length} (wymagane: 1-500)`);
         return false;
       }
-      console.info(`   ✅ Fiszka ${index} zaakceptowana`);
+      // console.info(`   ✅ Fiszka ${index} zaakceptowana`);
       return true;
     });
 
-  console.info(`✅ Walidacja zakończona: ${candidates.length}/${aiFlashcards.length} fiszek przeszło walidację`);
+  // console.info(`✅ Walidacja zakończona: ${candidates.length}/${aiFlashcards.length} fiszek przeszło walidację`);
 
   return candidates;
 }
@@ -219,27 +219,27 @@ export async function processGeneration(
   try {
     // Step 1: Check rate limit
     await checkRateLimit(supabase, userId);
-    console.info("after checkRateLimit");
+    //console.info("after checkRateLimit");
     // Step 2: Generate hash of input text (for privacy and duplicate detection)
     const inputTextHash = generateSHA256Hash(inputText);
     const inputTextLength = inputText.length;
-    console.info("after inputTextLength");
+    //console.info("after inputTextLength");
     // Step 3: Call AI service to generate flashcards
-    console.info("📡 Wywołuję generateFlashcardsWithAI...");
+    // console.info("📡 Wywołuję generateFlashcardsWithAI...");
     const aiFlashcards = await generateFlashcardsWithAI(inputText);
-    console.info(`✅ generateFlashcardsWithAI zwróciło ${aiFlashcards.length} fiszek`);
+    // console.info(`✅ generateFlashcardsWithAI zwróciło ${aiFlashcards.length} fiszek`);
 
     // Calculate duration
     const durationMs = Date.now() - startTime;
 
     // Step 4: Validate and filter candidates
-    console.info("🔍 Rozpoczynam walidację kandydatów...");
+    // console.info("🔍 Rozpoczynam walidację kandydatów...");
     const candidates = validateFlashcardCandidates(aiFlashcards);
-    console.info(`✅ Po walidacji pozostało ${candidates.length} kandydatów`);
+    // console.info(`✅ Po walidacji pozostało ${candidates.length} kandydatów`);
 
     if (candidates.length === 0) {
-      console.error("❌ BŁĄD: Żadna fiszka nie przeszła walidacji!");
-      console.error("Surowe fiszki od AI:", JSON.stringify(aiFlashcards, null, 2));
+      //  console.error("❌ BŁĄD: Żadna fiszka nie przeszła walidacji!");
+      //  console.error("Surowe fiszki od AI:", JSON.stringify(aiFlashcards, null, 2));
       throw new AIServiceError("No valid flashcards could be generated from the input");
     }
 

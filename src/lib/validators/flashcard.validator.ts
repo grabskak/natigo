@@ -3,7 +3,7 @@
  * Zgodne z business rules: front 1-200 znaków, back 1-500 znaków (po trim)
  */
 
-import type { ValidationState, FlashcardFormData } from '@/types';
+import type { ValidationState, FlashcardFormData } from "@/types";
 
 /**
  * Walidacja pola Front
@@ -14,23 +14,23 @@ import type { ValidationState, FlashcardFormData } from '@/types';
  */
 export function validateFront(value: string): ValidationState {
   const trimmed = value.trim();
-  
+
   // Empty check
   if (trimmed.length === 0) {
     return {
       isValid: false,
-      message: 'Front is required',
+      message: "Front is required",
     };
   }
-  
+
   // Max length check
   if (trimmed.length > 200) {
     return {
       isValid: false,
-      message: 'Front must not exceed 200 characters',
+      message: "Front must not exceed 200 characters",
     };
   }
-  
+
   // Valid
   return {
     isValid: true,
@@ -47,23 +47,23 @@ export function validateFront(value: string): ValidationState {
  */
 export function validateBack(value: string): ValidationState {
   const trimmed = value.trim();
-  
+
   // Empty check
   if (trimmed.length === 0) {
     return {
       isValid: false,
-      message: 'Back is required',
+      message: "Back is required",
     };
   }
-  
+
   // Max length check
   if (trimmed.length > 500) {
     return {
       isValid: false,
-      message: 'Back must not exceed 500 characters',
+      message: "Back must not exceed 500 characters",
     };
   }
-  
+
   // Valid
   return {
     isValid: true,
@@ -82,7 +82,7 @@ export function validateFlashcardForm(data: FlashcardFormData): {
 } {
   const frontValidation = validateFront(data.front);
   const backValidation = validateBack(data.back);
-  
+
   return {
     front: frontValidation,
     back: backValidation,

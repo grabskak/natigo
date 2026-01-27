@@ -17,10 +17,7 @@ export function LoadingState({
 }: LoadingStateProps) {
   return (
     <div
-      className={cn(
-        "flex flex-col items-center justify-center py-12 px-4",
-        className
-      )}
+      className={cn("flex flex-col items-center justify-center py-12 px-4", className)}
       role="status"
       aria-live="polite"
     >
@@ -31,9 +28,7 @@ export function LoadingState({
       </div>
 
       {/* Message */}
-      <p className="text-lg text-gray-700 dark:text-gray-300 text-center max-w-md">
-        {message}
-      </p>
+      <p className="text-lg text-gray-700 dark:text-gray-300 text-center max-w-md">{message}</p>
       <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 text-center">
         Proszę czekać, nasze AI przetwarza Twój tekst...
       </p>

@@ -2,7 +2,7 @@
  * FlashcardsHeader - Nagłówek strony z tytułem i przyciskami akcji
  */
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 interface FlashcardsHeaderProps {
   onAddClick: () => void;

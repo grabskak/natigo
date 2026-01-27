@@ -58,4 +58,3 @@ export function AuthCallbackView({ next }: AuthCallbackViewProps) {
     </div>
   );
 }
-
