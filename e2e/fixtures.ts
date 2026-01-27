@@ -48,7 +48,7 @@ export const test = base.extend<Fixtures>({
   },
 
   // Test user fixture (kept for reference, but login is done once in setup)
-  testUser: async (_context, provideTestUser) => {
+  testUser: async (_, provideTestUser: (testUser: { email: string; password: string }) => Promise<void>) => {
     const testUser = {
       email: process.env.E2E_USERNAME || "test@gmail.com",
       password: process.env.E2E_PASSWORD || "tets!",
@@ -57,7 +57,7 @@ export const test = base.extend<Fixtures>({
   },
 
   // Long text fixture (for generation)
-  longText: async (_context, provideLongText) => {
+  longText: async (_, provideLongText: (longText: string) => Promise<void>) => {
     // Generate text with ~1500 characters (valid for generation)
     const baseText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
     const longText = baseText.repeat(30); // ~1740 characters
