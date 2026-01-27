@@ -160,7 +160,7 @@ export function validateFlashcardCandidates(aiFlashcards: AIFlashcard[]): Flashc
   // console.info(`🔍 Walidacja ${aiFlashcards.length} fiszek w generation.service...`);
 
   const candidates = aiFlashcards
-    .map((card, index) => {
+    .map((card) => {
       const candidate = {
         front: card.front.trim(),
         back: card.back.trim(),
@@ -172,7 +172,7 @@ export function validateFlashcardCandidates(aiFlashcards: AIFlashcard[]): Flashc
 
       return candidate;
     })
-    .filter((card, index) => {
+    .filter((card) => {
       // Validate front length (1-200 characters)
       if (card.front.length < 1 || card.front.length > 200) {
         //  console.warn(`   ❌ Fiszka ${index} odrzucona: front length ${card.front.length} (wymagane: 1-200)`);

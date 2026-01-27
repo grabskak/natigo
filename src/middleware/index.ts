@@ -70,7 +70,7 @@ export const onRequest = defineMiddleware(async (context: APIContext, next) => {
     // Also clear cookies to avoid redirect loops.
     try {
       await supabase.auth.signOut();
-    } catch (signOutError) {
+    } catch {
       // console.error("Middleware: failed to sign out unconfirmed session:", signOutError);
     }
     effectiveUser = null;
