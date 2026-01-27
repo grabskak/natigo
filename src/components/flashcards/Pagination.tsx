@@ -2,9 +2,9 @@
  * Pagination - Komponent paginacji z przyciskami Previous/Next i numerami stron
  */
 
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { PaginationState } from '@/types';
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { PaginationState } from "@/types";
 
 interface PaginationProps {
   pagination: PaginationState;
@@ -38,21 +38,21 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
         for (let i = 2; i <= 5; i++) {
           pages.push(i);
         }
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
         // Near the end
-        pages.push('...');
+        pages.push("...");
         for (let i = totalPages - 4; i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
         // In the middle
-        pages.push('...');
+        pages.push("...");
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
           pages.push(i);
         }
-        pages.push('...');
+        pages.push("...");
         pages.push(totalPages);
       }
     }
@@ -63,11 +63,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
   const pageNumbers = getPageNumbers();
 
   return (
-    <nav
-      role="navigation"
-      aria-label="Pagination navigation"
-      className="flex justify-center items-center gap-2 my-8"
-    >
+    <nav role="navigation" aria-label="Pagination navigation" className="flex justify-center items-center gap-2 my-8">
       {/* Previous Button */}
       <Button
         variant="outline"
@@ -83,12 +79,9 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
       {/* Page Numbers */}
       <div className="flex items-center gap-1">
         {pageNumbers.map((page, index) => {
-          if (page === '...') {
+          if (page === "...") {
             return (
-              <span
-                key={`ellipsis-${index}`}
-                className="px-2 text-muted-foreground"
-              >
+              <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
                 ...
               </span>
             );
@@ -100,7 +93,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
           return (
             <Button
               key={pageNumber}
-              variant={isActive ? 'default' : 'ghost'}
+              variant={isActive ? "default" : "ghost"}
               size="sm"
               onClick={() => onPageChange(pageNumber)}
               disabled={isActive}

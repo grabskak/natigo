@@ -24,44 +24,44 @@ interface Fixtures {
  */
 export const test = base.extend<Fixtures>({
   // Auth page fixture (kept for tests that explicitly test auth flows)
-  authPage: async ({ page }, use) => {
+  authPage: async ({ page }, provideAuthPage) => {
     const authPage = new AuthPage(page);
-    await use(authPage);
+    await provideAuthPage(authPage);
   },
 
   // Generate page fixture
-  generatePage: async ({ page }, use) => {
+  generatePage: async ({ page }, provideGeneratePage) => {
     const generatePage = new GeneratePage(page);
-    await use(generatePage);
+    await provideGeneratePage(generatePage);
   },
 
   // Candidates review page fixture
-  candidatesReviewPage: async ({ page }, use) => {
+  candidatesReviewPage: async ({ page }, provideCandidatesReviewPage) => {
     const candidatesReviewPage = new CandidatesReviewPage(page);
-    await use(candidatesReviewPage);
+    await provideCandidatesReviewPage(candidatesReviewPage);
   },
 
   // Flashcards page fixture
-  flashcardsPage: async ({ page }, use) => {
+  flashcardsPage: async ({ page }, provideFlashcardsPage) => {
     const flashcardsPage = new FlashcardsPage(page);
-    await use(flashcardsPage);
+    await provideFlashcardsPage(flashcardsPage);
   },
 
   // Test user fixture (kept for reference, but login is done once in setup)
-  testUser: async ({}, use) => {
+  testUser: async (_context, provideTestUser) => {
     const testUser = {
       email: process.env.E2E_USERNAME || "test@gmail.com",
       password: process.env.E2E_PASSWORD || "tets!",
     };
-    await use(testUser);
+    await provideTestUser(testUser);
   },
 
   // Long text fixture (for generation)
-  longText: async ({}, use) => {
+  longText: async (_context, provideLongText) => {
     // Generate text with ~1500 characters (valid for generation)
     const baseText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
     const longText = baseText.repeat(30); // ~1740 characters
-    await use(longText);
+    await provideLongText(longText);
   },
 });
 

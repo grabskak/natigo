@@ -47,4 +47,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     { status: 200, headers: { "Content-Type": "application/json" } }
   );
 };
-

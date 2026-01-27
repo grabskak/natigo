@@ -48,7 +48,9 @@ test.describe("Flashcards - List Display", () => {
       // Should have content
       const cardText = await firstCard.first().textContent();
       expect(cardText).toBeTruthy();
-      expect(cardText!.length).toBeGreaterThan(0);
+      if (cardText) {
+        expect(cardText.length).toBeGreaterThan(0);
+      }
     }
   });
 

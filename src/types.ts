@@ -321,11 +321,11 @@ export type PaginatedErrorLogsResponse = PaginatedResponse<ErrorLogDto>;
 /**
  * State of the main Generate Screen container
  */
-export type GenerateScreenState = 
-  | { status: 'form' }
-  | { status: 'loading' }
-  | { status: 'error', error: ApiError }
-  | { status: 'review', data: GenerationResult };
+export type GenerateScreenState =
+  | { status: "form" }
+  | { status: "loading" }
+  | { status: "error"; error: ApiError }
+  | { status: "review"; data: GenerationResult };
 
 /**
  * Result from generation API with all candidates
@@ -339,7 +339,7 @@ export interface GenerationResult {
 /**
  * Decision state for each candidate
  */
-export type CandidateDecisionState = 'pending' | 'accepted' | 'edited' | 'rejected';
+export type CandidateDecisionState = "pending" | "accepted" | "edited" | "rejected";
 
 /**
  * User decision for a single candidate
@@ -400,9 +400,9 @@ export interface PaginationState {
  * Filtry dla listy fiszek
  */
 export interface FlashcardsFilters {
-  source: 'all' | FlashcardSource;
-  sort: 'created_at' | 'updated_at';
-  order: 'asc' | 'desc';
+  source: "all" | FlashcardSource;
+  sort: "created_at" | "updated_at";
+  order: "asc" | "desc";
 }
 
 /**
@@ -410,7 +410,7 @@ export interface FlashcardsFilters {
  */
 export interface FlashcardModalState {
   isOpen: boolean;
-  mode: 'add' | 'edit';
+  mode: "add" | "edit";
   flashcard: FlashcardDto | null;
   formData: FlashcardFormData;
   validation: {
@@ -442,7 +442,7 @@ export interface DeleteDialogState {
 /**
  * Wariant pustego stanu
  */
-export type EmptyStateVariant = 'total-empty' | 'filtered-empty';
+export type EmptyStateVariant = "total-empty" | "filtered-empty";
 
 /**
  * Rozszerzona PaginationMeta z total_pages
@@ -473,4 +473,4 @@ export type {
   AIFlashcard,
   TokenUsage,
   JsonSchema,
-} from './lib/types/openrouter.types';
+} from "./lib/types/openrouter.types";

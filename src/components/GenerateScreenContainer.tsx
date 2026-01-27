@@ -43,7 +43,7 @@ export function GenerateScreenContainer() {
         // Transition to error state
         setScreenState({
           status: "error",
-          error: error as any,
+          error: error instanceof Error ? error : new Error(String(error)),
         });
       }
     },
@@ -73,7 +73,7 @@ export function GenerateScreenContainer() {
       description: "Twoje fiszki zostały dodane do kolekcji.",
       duration: 3000,
     });
-    
+
     // Redirect to flashcards page with source filter after a short delay
     setTimeout(() => {
       window.location.href = "/flashcards?source=ai-full";
@@ -91,20 +91,14 @@ export function GenerateScreenContainer() {
   return (
     <div className="w-full">
       {/* Form State */}
-      {screenState.status === "form" && (
-        <GenerateForm onGenerate={handleGenerate} isLoading={isLoading} />
-      )}
+      {screenState.status === "form" && <GenerateForm onGenerate={handleGenerate} isLoading={isLoading} />}
 
       {/* Loading State */}
       {screenState.status === "loading" && <LoadingState />}
 
       {/* Error State */}
       {screenState.status === "error" && (
-        <ErrorDisplay
-          error={screenState.error}
-          onRetry={handleRetry}
-          onBackToForm={handleBackToForm}
-        />
+        <ErrorDisplay error={screenState.error} onRetry={handleRetry} onBackToForm={handleBackToForm} />
       )}
 
       {/* Review State */}

@@ -34,16 +34,9 @@ export function CandidatesReview({
   onCancel,
   className,
 }: CandidatesReviewProps) {
-  const {
-    accept,
-    reject,
-    edit,
-    cancelEdit,
-    getDecision,
-    getState,
-    getStats,
-    getAcceptedCount,
-  } = useDecisions(candidates.length);
+  const { accept, reject, edit, cancelEdit, getDecision, getState, getStats, getAcceptedCount } = useDecisions(
+    candidates.length
+  );
 
   const { save, isSaving, error: saveError } = useSaveFlashcards();
   const [localError, setLocalError] = useState<ApiError | null>(null);
@@ -142,9 +135,7 @@ export function CandidatesReview({
               <h3 className="text-sm font-medium text-red-800 dark:text-red-300 mb-1">
                 {displayError.code === "NO_FLASHCARDS" ? "Nie wybrano fiszek" : "Zapisywanie nie powiodło się"}
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-400">
-                {displayError.message}
-              </p>
+              <p className="text-sm text-red-700 dark:text-red-400">{displayError.message}</p>
             </div>
           </div>
         </div>
@@ -174,12 +165,7 @@ export function CandidatesReview({
       <div className="h-20"></div>
 
       {/* Sticky Save Actions Bar */}
-      <SaveActionsBar
-        acceptedCount={acceptedCount}
-        onSave={handleSave}
-        onCancel={handleCancel}
-        isSaving={isSaving}
-      />
+      <SaveActionsBar acceptedCount={acceptedCount} onSave={handleSave} onCancel={handleCancel} isSaving={isSaving} />
     </div>
   );
 }

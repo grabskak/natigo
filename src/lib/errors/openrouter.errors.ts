@@ -9,7 +9,7 @@ export class OpenRouterError extends Error {
     public readonly details?: unknown
   ) {
     super(message);
-    this.name = 'OpenRouterError';
+    this.name = "OpenRouterError";
   }
 }
 
@@ -18,8 +18,8 @@ export class OpenRouterError extends Error {
  */
 export class OpenRouterConfigError extends OpenRouterError {
   constructor(message: string, details?: unknown) {
-    super(message, 'OPENROUTER_CONFIG_ERROR', undefined, details);
-    this.name = 'OpenRouterConfigError';
+    super(message, "OPENROUTER_CONFIG_ERROR", undefined, details);
+    this.name = "OpenRouterConfigError";
   }
 }
 
@@ -28,8 +28,8 @@ export class OpenRouterConfigError extends OpenRouterError {
  */
 export class OpenRouterAuthenticationError extends OpenRouterError {
   constructor(message: string, statusCode: number, details?: unknown) {
-    super(message, 'OPENROUTER_AUTH_ERROR', statusCode, details);
-    this.name = 'OpenRouterAuthenticationError';
+    super(message, "OPENROUTER_AUTH_ERROR", statusCode, details);
+    this.name = "OpenRouterAuthenticationError";
   }
 }
 
@@ -38,8 +38,8 @@ export class OpenRouterAuthenticationError extends OpenRouterError {
  */
 export class OpenRouterValidationError extends OpenRouterError {
   constructor(message: string, statusCode: number, details?: unknown) {
-    super(message, 'OPENROUTER_VALIDATION_ERROR', statusCode, details);
-    this.name = 'OpenRouterValidationError';
+    super(message, "OPENROUTER_VALIDATION_ERROR", statusCode, details);
+    this.name = "OpenRouterValidationError";
   }
 }
 
@@ -52,8 +52,8 @@ export class OpenRouterRateLimitError extends OpenRouterError {
     public readonly retryAfter?: number,
     details?: unknown
   ) {
-    super(message, 'OPENROUTER_RATE_LIMIT', 429, details);
-    this.name = 'OpenRouterRateLimitError';
+    super(message, "OPENROUTER_RATE_LIMIT", 429, details);
+    this.name = "OpenRouterRateLimitError";
   }
 }
 
@@ -66,8 +66,8 @@ export class OpenRouterModelNotFoundError extends OpenRouterError {
     public readonly requestedModel: string,
     details?: unknown
   ) {
-    super(message, 'OPENROUTER_MODEL_NOT_FOUND', 404, details);
-    this.name = 'OpenRouterModelNotFoundError';
+    super(message, "OPENROUTER_MODEL_NOT_FOUND", 404, details);
+    this.name = "OpenRouterModelNotFoundError";
   }
 }
 
@@ -76,8 +76,8 @@ export class OpenRouterModelNotFoundError extends OpenRouterError {
  */
 export class OpenRouterServiceError extends OpenRouterError {
   constructor(message: string, statusCode: number, details?: unknown) {
-    super(message, 'OPENROUTER_SERVICE_ERROR', statusCode, details);
-    this.name = 'OpenRouterServiceError';
+    super(message, "OPENROUTER_SERVICE_ERROR", statusCode, details);
+    this.name = "OpenRouterServiceError";
   }
 }
 
@@ -85,9 +85,12 @@ export class OpenRouterServiceError extends OpenRouterError {
  * Błędy sieciowe (timeout, odmowa połączenia, itp.)
  */
 export class OpenRouterNetworkError extends OpenRouterError {
-  constructor(message: string, public readonly cause?: Error) {
-    super(message, 'OPENROUTER_NETWORK_ERROR', undefined, cause);
-    this.name = 'OpenRouterNetworkError';
+  constructor(
+    message: string,
+    public readonly cause?: Error
+  ) {
+    super(message, "OPENROUTER_NETWORK_ERROR", undefined, cause);
+    this.name = "OpenRouterNetworkError";
   }
 }
 
@@ -96,8 +99,8 @@ export class OpenRouterNetworkError extends OpenRouterError {
  */
 export class OpenRouterParseError extends OpenRouterError {
   constructor(message: string, details?: unknown) {
-    super(message, 'OPENROUTER_PARSE_ERROR', undefined, details);
-    this.name = 'OpenRouterParseError';
+    super(message, "OPENROUTER_PARSE_ERROR", undefined, details);
+    this.name = "OpenRouterParseError";
   }
 }
 
@@ -105,9 +108,12 @@ export class OpenRouterParseError extends OpenRouterError {
  * Błędy timeout
  */
 export class OpenRouterTimeoutError extends OpenRouterError {
-  constructor(message: string, public readonly timeoutMs: number) {
-    super(message, 'OPENROUTER_TIMEOUT', undefined, { timeoutMs });
-    this.name = 'OpenRouterTimeoutError';
+  constructor(
+    message: string,
+    public readonly timeoutMs: number
+  ) {
+    super(message, "OPENROUTER_TIMEOUT", undefined, { timeoutMs });
+    this.name = "OpenRouterTimeoutError";
   }
 }
 
@@ -116,8 +122,8 @@ export class OpenRouterTimeoutError extends OpenRouterError {
  */
 export class OpenRouterInsufficientCreditsError extends OpenRouterError {
   constructor(message: string, details?: unknown) {
-    super(message, 'OPENROUTER_INSUFFICIENT_CREDITS', 402, details);
-    this.name = 'OpenRouterInsufficientCreditsError';
+    super(message, "OPENROUTER_INSUFFICIENT_CREDITS", 402, details);
+    this.name = "OpenRouterInsufficientCreditsError";
   }
 }
 
@@ -126,25 +132,25 @@ export class OpenRouterInsufficientCreditsError extends OpenRouterError {
  */
 export function getUserFriendlyErrorMessage(error: OpenRouterError): string {
   switch (error.code) {
-    case 'OPENROUTER_AUTH_ERROR':
-      return 'Uwierzytelnianie nie powiodło się. Sprawdź swój klucz API.';
-    case 'OPENROUTER_RATE_LIMIT':
-      return 'Za dużo żądań. Spróbuj ponownie za chwilę.';
-    case 'OPENROUTER_TIMEOUT':
-      return 'Upłynął limit czasu żądania. Spróbuj ponownie.';
-    case 'OPENROUTER_NETWORK_ERROR':
-      return 'Błąd sieci. Sprawdź swoje połączenie i spróbuj ponownie.';
-    case 'OPENROUTER_MODEL_NOT_FOUND':
-      return 'Model niedostępny. Wybierz inny model.';
-    case 'OPENROUTER_INSUFFICIENT_CREDITS':
-      return 'Niewystarczające środki. Doładuj swoje konto OpenRouter.';
-    case 'OPENROUTER_PARSE_ERROR':
-      return 'Nie udało się przetworzyć odpowiedzi AI. Spróbuj ponownie.';
-    case 'OPENROUTER_SERVICE_ERROR':
-      return 'Usługa AI jest tymczasowo niedostępna. Spróbuj ponownie później.';
-    case 'OPENROUTER_VALIDATION_ERROR':
-      return 'Niepoprawne żądanie. Sprawdź swoje dane wejściowe i spróbuj ponownie.';
+    case "OPENROUTER_AUTH_ERROR":
+      return "Uwierzytelnianie nie powiodło się. Sprawdź swój klucz API.";
+    case "OPENROUTER_RATE_LIMIT":
+      return "Za dużo żądań. Spróbuj ponownie za chwilę.";
+    case "OPENROUTER_TIMEOUT":
+      return "Upłynął limit czasu żądania. Spróbuj ponownie.";
+    case "OPENROUTER_NETWORK_ERROR":
+      return "Błąd sieci. Sprawdź swoje połączenie i spróbuj ponownie.";
+    case "OPENROUTER_MODEL_NOT_FOUND":
+      return "Model niedostępny. Wybierz inny model.";
+    case "OPENROUTER_INSUFFICIENT_CREDITS":
+      return "Niewystarczające środki. Doładuj swoje konto OpenRouter.";
+    case "OPENROUTER_PARSE_ERROR":
+      return "Nie udało się przetworzyć odpowiedzi AI. Spróbuj ponownie.";
+    case "OPENROUTER_SERVICE_ERROR":
+      return "Usługa AI jest tymczasowo niedostępna. Spróbuj ponownie później.";
+    case "OPENROUTER_VALIDATION_ERROR":
+      return "Niepoprawne żądanie. Sprawdź swoje dane wejściowe i spróbuj ponownie.";
     default:
-      return 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.';
+      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
   }
 }

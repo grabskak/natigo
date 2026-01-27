@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 
 /**
  * Test helpers and utilities for E2E tests
@@ -29,7 +29,7 @@ export async function waitForToastClose(page: Page) {
 /**
  * Extract flashcard ID from card element
  */
-export async function extractFlashcardId(cardLocator: any): Promise<string> {
+export async function extractFlashcardId(cardLocator: Locator): Promise<string> {
   const testId = await cardLocator.getAttribute("data-testid");
   if (!testId) {
     throw new Error("Card does not have data-testid attribute");
@@ -55,8 +55,8 @@ export async function waitForNetworkIdle(page: Page, timeout = 5000) {
 /**
  * Check if element is in viewport
  */
-export async function isInViewport(page: Page, locator: any): Promise<boolean> {
-  return await locator.evaluate((element: Element) => {
+export async function isInViewport(page: Page, locator: Locator): Promise<boolean> {
+  return await locator.evaluate((element) => {
     const rect = element.getBoundingClientRect();
     return (
       rect.top >= 0 &&
@@ -70,8 +70,8 @@ export async function isInViewport(page: Page, locator: any): Promise<boolean> {
 /**
  * Scroll element into view
  */
-export async function scrollIntoView(locator: any) {
-  await locator.evaluate((element: Element) => {
+export async function scrollIntoView(locator: Locator) {
+  await locator.evaluate((element) => {
     element.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 }
@@ -115,7 +115,7 @@ export async function clearAuth(page: Page) {
 /**
  * Mock API response for testing
  */
-export async function mockApiResponse(page: Page, url: string | RegExp, response: any, status = 200) {
+export async function mockApiResponse(page: Page, url: string | RegExp, response: unknown, status = 200) {
   await page.route(url, (route) => {
     route.fulfill({
       status,
@@ -147,7 +147,7 @@ export async function takeTimestampedScreenshot(page: Page, name: string) {
 /**
  * Get element bounding box
  */
-export async function getBoundingBox(locator: any) {
+export async function getBoundingBox(locator: Locator) {
   return await locator.boundingBox();
 }
 

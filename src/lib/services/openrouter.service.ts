@@ -76,7 +76,7 @@ export class OpenRouterService {
 
     // Ostrzeżenie jeśli klucz nie pasuje do formatu OpenRouter
     if (!this.apiKey.startsWith("sk-or-")) {
-      console.warn("Klucz API nie pasuje do oczekiwanego formatu OpenRouter (sk-or-...)");
+      // console.warn("Klucz API nie pasuje do oczekiwanego formatu OpenRouter (sk-or-...)");
     }
 
     // Walidacja i ustawienie baseUrl
@@ -137,7 +137,7 @@ export class OpenRouterService {
     this.config = Object.freeze({ ...config });
 
     // Logowanie konfiguracji (z ukrytym kluczem API)
-    console.info("OpenRouter Service zainicjalizowany:", this.getRedactedConfig());
+    // console.info("OpenRouter Service zainicjalizowany:", this.getRedactedConfig());
   }
 
   /**
@@ -462,9 +462,9 @@ export class OpenRouterService {
 
           if (attemptNumber < maxRetries) {
             const backoffMs = this.retryDelay * Math.pow(2, attemptNumber);
-            console.warn(
-              `Limitowanie szybkości (429), ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`
-            );
+            // console.warn(
+            //   `Limitowanie szybkości (429), ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`
+            // );
             await new Promise((resolve) => setTimeout(resolve, backoffMs));
             attemptNumber++;
             continue;
@@ -481,9 +481,9 @@ export class OpenRouterService {
         if (response.status >= 500) {
           if (attemptNumber < maxRetries) {
             const backoffMs = this.retryDelay * Math.pow(2, attemptNumber);
-            console.warn(
-              `Błąd serwera ${response.status}, ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`
-            );
+            // console.warn(
+            //   `Błąd serwera ${response.status}, ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`
+            // );
             await new Promise((resolve) => setTimeout(resolve, backoffMs));
             attemptNumber++;
             continue;
@@ -524,10 +524,10 @@ export class OpenRouterService {
         // Błędy sieciowe - próbujemy ponowić
         if (attemptNumber < maxRetries) {
           const backoffMs = this.retryDelay * Math.pow(2, attemptNumber);
-          console.warn(
-            `Błąd sieciowy, ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`,
-            this.sanitizeErrorMessage(error)
-          );
+          // console.warn(
+          //   `Błąd sieciowy, ponowienie za ${backoffMs}ms... (próba ${attemptNumber + 1}/${maxRetries})`,
+          //   this.sanitizeErrorMessage(error)
+          // );
           lastError = error as Error;
           await new Promise((resolve) => setTimeout(resolve, backoffMs));
           attemptNumber++;
@@ -572,7 +572,17 @@ export class OpenRouterService {
 
     // Parsuj JSON jeśli to strukturyzowana odpowiedź
     try {
-      content = JSON.parse(rawContent) as T;
+      // Usuń markdown code fences jeśli obecne (```json ... ```)
+      let cleanedContent = rawContent.trim();
+      if (cleanedContent.startsWith("```")) {
+        // Usuń opening fence (```json lub ```)
+        cleanedContent = cleanedContent.replace(/^```(?:json)?\s*\n?/, "");
+        // Usuń closing fence (```)
+        cleanedContent = cleanedContent.replace(/\n?```\s*$/, "");
+        cleanedContent = cleanedContent.trim();
+      }
+
+      content = JSON.parse(cleanedContent) as T;
     } catch {
       // Jeśli parsowanie się nie powiodło, zwróć surową zawartość jako string
       content = rawContent as unknown as T;
@@ -600,7 +610,7 @@ export class OpenRouterService {
     };
 
     // Loguj użycie tokenów
-    this.logTokenUsage(result.usage, result.model);
+    // this.logTokenUsage(result.usage, result.model);
 
     return result;
   }
@@ -609,34 +619,34 @@ export class OpenRouterService {
    * Loguje użycie tokenów dla monitorowania kosztów
    * @private
    */
-  private logTokenUsage(
-    usage: { promptTokens: number; completionTokens: number; totalTokens: number },
-    model: string
-  ): void {
-    console.info("Użycie Tokenów OpenRouter:", {
-      model,
-      promptTokens: usage.promptTokens,
-      completionTokens: usage.completionTokens,
-      totalTokens: usage.totalTokens,
-      timestamp: new Date().toISOString(),
-    });
-  }
+  // private logTokenUsage(
+  //   _usage: { promptTokens: number; completionTokens: number; totalTokens: number },
+  //   _model: string
+  // ): void {
+  //   // console.info("Użycie Tokenów OpenRouter:", {
+  //   //   model: _model,
+  //   //   promptTokens: _usage.promptTokens,
+  //   //   completionTokens: _usage.completionTokens,
+  //   //   totalTokens: _usage.totalTokens,
+  //   //   timestamp: new Date().toISOString(),
+  //   // });
+  // }
 
   /**
    * Loguje błędy ze strukturyzowanymi informacjami
    * @private
    */
-  private logError(error: OpenRouterError, context: Record<string, unknown>): void {
-    console.error("Błąd OpenRouter:", {
-      name: error.name,
-      code: error.code,
-      message: error.message,
-      statusCode: error.statusCode,
-      details: error.details,
-      context,
-      timestamp: new Date().toISOString(),
-    });
-  }
+  // private logError(_error: OpenRouterError, _context: Record<string, unknown>): void {
+  //   // console.error("Błąd OpenRouter:", {
+  //   //   name: _error.name,
+  //   //   code: _error.code,
+  //   //   message: _error.message,
+  //   //   statusCode: _error.statusCode,
+  //   //   details: _error.details,
+  //   //   context: _context,
+  //   //   timestamp: new Date().toISOString(),
+  //   // });
+  // }
 
   // ============================================================================
   // METODY PUBLICZNE
@@ -691,38 +701,23 @@ export class OpenRouterService {
   async complete<T = any>(options: CompletionOptions): Promise<CompletionResult<T>> {
     const startTime = Date.now();
 
-    try {
-      // 1. Zbuduj żądanie (walidacja jest wewnątrz)
-      const request = this.buildRequest(options);
+    // 1. Zbuduj żądanie (walidacja jest wewnątrz)
+    const request = this.buildRequest(options);
 
-      // 2. Określ timeout i maxRetries (użyj podanych lub domyślnych)
-      const timeout = options.timeout ?? this.timeout;
-      const maxRetries = options.maxRetries ?? this.maxRetries;
+    // 2. Określ timeout i maxRetries (użyj podanych lub domyślnych)
+    const timeout = options.timeout ?? this.timeout;
+    const maxRetries = options.maxRetries ?? this.maxRetries;
 
-      // 3. Wykonaj żądanie z ponowieniami
-      const response = await this.executeRequest(request, timeout, maxRetries);
+    // 3. Wykonaj żądanie z ponowieniami
+    const response = await this.executeRequest(request, timeout, maxRetries);
 
-      // 4. Parsuj odpowiedź
-      const result = this.parseResponse<T>(response);
+    // 4. Parsuj odpowiedź
+    const result = this.parseResponse<T>(response);
 
-      // 5. Dodaj czas przetwarzania
-      result.metadata.processingTime = Date.now() - startTime;
+    // 5. Dodaj czas przetwarzania
+    result.metadata.processingTime = Date.now() - startTime;
 
-      return result;
-    } catch (error) {
-      // Loguj błąd z kontekstem
-      if (error instanceof OpenRouterError) {
-        this.logError(error, {
-          model: options.model || this.defaultModel,
-          messagesCount: options.messages.length,
-          hasResponseFormat: !!options.responseFormat,
-          processingTime: Date.now() - startTime,
-        });
-      }
-
-      // Ponownie rzuć błąd
-      throw error;
-    }
+    return result;
   }
 
   /**
@@ -858,7 +853,7 @@ Example output structure:
     };
 
     // Wywołaj complete z odpowiednią konfiguracją
-    console.info("📤 Wysyłam żądanie do OpenRouter API...");
+    // console.info("📤 Wysyłam żądanie do OpenRouter API...");
     const result = await this.complete<{ flashcards: AIFlashcard[] }>({
       systemMessage: systemPrompt,
       messages: [
@@ -880,24 +875,24 @@ ${trimmedText}`,
       timeout: options?.timeout,
     });
 
-    console.info("📥 Otrzymano odpowiedź z OpenRouter API");
-    console.info("Surowa odpowiedź content:", JSON.stringify(result.content, null, 2));
+    // console.info("📥 Otrzymano odpowiedź z OpenRouter API");
+    // console.info("Surowa odpowiedź content:", JSON.stringify(result.content, null, 2));
 
     // Waliduj i filtruj wygenerowane fiszki
-    console.info("🔍 Sprawdzanie surowej odpowiedzi AI...");
-    console.info("Typ content:", typeof result.content);
-    console.info("Content keys:", result.content ? Object.keys(result.content) : "brak");
+    // console.info("🔍 Sprawdzanie surowej odpowiedzi AI...");
+    // console.info("Typ content:", typeof result.content);
+    // console.info("Content keys:", result.content ? Object.keys(result.content) : "brak");
 
     if (!result.content.flashcards || !Array.isArray(result.content.flashcards)) {
-      console.error("❌ Odpowiedź API nie zawiera tablicy fiszek:", {
-        hasFlashcards: "flashcards" in result.content,
-        flashcardsType: result.content.flashcards ? typeof result.content.flashcards : "undefined",
-        content: JSON.stringify(result.content, null, 2),
-      });
+      // console.error("❌ Odpowiedź API nie zawiera tablicy fiszek:", {
+      //   hasFlashcards: "flashcards" in result.content,
+      //   flashcardsType: result.content.flashcards ? typeof result.content.flashcards : "undefined",
+      //   content: JSON.stringify(result.content, null, 2),
+      // });
       throw new OpenRouterParseError("Odpowiedź API nie zawiera tablicy fiszek", { content: result.content });
     }
 
-    console.info(`✅ Otrzymano ${result.content.flashcards.length} fiszek od AI, rozpoczynam walidację...`);
+    // console.info(`✅ Otrzymano ${result.content.flashcards.length} fiszek od AI, rozpoczynam walidację...`);
 
     const validFlashcards: AIFlashcard[] = [];
     const validationErrors: { index: number; reason: string; card?: unknown }[] = [];
@@ -906,7 +901,7 @@ ${trimmedText}`,
       // Walidacja struktury
       if (!card || typeof card !== "object") {
         const reason = `niepoprawna struktura (typ: ${typeof card})`;
-        console.warn(`⚠️  Fiszka ${index}: ${reason}`);
+        // console.warn(`⚠️  Fiszka ${index}: ${reason}`);
         validationErrors.push({ index, reason, card });
         continue;
       }
@@ -914,7 +909,7 @@ ${trimmedText}`,
       // Walidacja front
       if (typeof card.front !== "string" || card.front.trim().length === 0) {
         const reason = `brak pytania (front) - typ: ${typeof card.front}`;
-        console.warn(`⚠️  Fiszka ${index}: ${reason}`);
+        // console.warn(`⚠️  Fiszka ${index}: ${reason}`);
         validationErrors.push({ index, reason, card });
         continue;
       }
@@ -922,8 +917,8 @@ ${trimmedText}`,
       const front = card.front.trim();
       if (front.length < 1 || front.length > 200) {
         const reason = `pytanie ma niepoprawną długość (${front.length} znaków, dozwolone: 1-200)`;
-        console.warn(`⚠️  Fiszka ${index}: ${reason}`);
-        console.warn(`    Front: "${front.substring(0, 100)}${front.length > 100 ? "..." : ""}"`);
+        // console.warn(`⚠️  Fiszka ${index}: ${reason}`);
+        // console.warn(`    Front: "${front.substring(0, 100)}${front.length > 100 ? "..." : ""}"`);
         validationErrors.push({ index, reason, card: { front: front.substring(0, 100), back: card.back } });
         continue;
       }
@@ -931,7 +926,7 @@ ${trimmedText}`,
       // Walidacja back
       if (typeof card.back !== "string" || card.back.trim().length === 0) {
         const reason = `brak odpowiedzi (back) - typ: ${typeof card.back}`;
-        console.warn(`⚠️  Fiszka ${index}: ${reason}`);
+        // console.warn(`⚠️  Fiszka ${index}: ${reason}`);
         validationErrors.push({ index, reason, card });
         continue;
       }
@@ -939,28 +934,28 @@ ${trimmedText}`,
       const back = card.back.trim();
       if (back.length < 1 || back.length > 500) {
         const reason = `odpowiedź ma niepoprawną długość (${back.length} znaków, dozwolone: 1-500)`;
-        console.warn(`⚠️  Fiszka ${index}: ${reason}`);
-        console.warn(`    Back: "${back.substring(0, 100)}${back.length > 100 ? "..." : ""}"`);
+        // console.warn(`⚠️  Fiszka ${index}: ${reason}`);
+        // console.warn(`    Back: "${back.substring(0, 100)}${back.length > 100 ? "..." : ""}"`);
         validationErrors.push({ index, reason, card: { front, back: back.substring(0, 100) } });
         continue;
       }
 
       // Dodaj poprawną fiszkę
-      console.info(
-        `✅ Fiszka ${index} POPRAWNA - Front: "${front.substring(0, 50)}..." (${front.length} znaków), Back: ${back.length} znaków`
-      );
+      // console.info(
+      //   `✅ Fiszka ${index} POPRAWNA - Front: "${front.substring(0, 50)}..." (${front.length} znaków), Back: ${back.length} znaków`
+      // );
       validFlashcards.push({ front, back });
     }
 
-    console.info(`\n📊 Podsumowanie walidacji fiszek:`);
-    console.info(`   Otrzymano od AI: ${result.content.flashcards.length}`);
-    console.info(`   Poprawnych: ${validFlashcards.length}`);
-    console.info(`   Odrzuconych: ${validationErrors.length}`);
+    // console.info(`\n📊 Podsumowanie walidacji fiszek:`);
+    // console.info(`   Otrzymano od AI: ${result.content.flashcards.length}`);
+    // console.info(`   Poprawnych: ${validFlashcards.length}`);
+    // console.info(`   Odrzuconych: ${validationErrors.length}`);
 
     // Sprawdź czy mamy wystarczającą liczbę fiszek
     if (validFlashcards.length === 0) {
-      console.error("❌ Nie udało się wygenerować żadnych poprawnych fiszek!");
-      console.error("Błędy walidacji:", JSON.stringify(validationErrors, null, 2));
+      // console.error("❌ Nie udało się wygenerować żadnych poprawnych fiszek!");
+      // console.error("Błędy walidacji:", JSON.stringify(validationErrors, null, 2));
       throw new OpenRouterParseError("Nie udało się wygenerować żadnych poprawnych fiszek", {
         generatedCount: result.content.flashcards.length,
         validationErrors: validationErrors,
@@ -969,12 +964,12 @@ ${trimmedText}`,
     }
 
     if (validFlashcards.length < minFlashcards) {
-      console.warn(`Wygenerowano tylko ${validFlashcards.length} fiszek, oczekiwano co najmniej ${minFlashcards}`);
+      // console.warn(`Wygenerowano tylko ${validFlashcards.length} fiszek, oczekiwano co najmniej ${minFlashcards}`);
     }
 
-    console.info(
-      `Pomyślnie wygenerowano ${validFlashcards.length} fiszek z ${result.content.flashcards.length} kandydatów`
-    );
+    // console.info(
+    //   `Pomyślnie wygenerowano ${validFlashcards.length} fiszek z ${result.content.flashcards.length} kandydatów`
+    // );
 
     return validFlashcards;
   }
@@ -1010,7 +1005,7 @@ ${trimmedText}`,
   async listModels(): Promise<ModelInfo[]> {
     // Sprawdź cache
     if (this.isCacheValid() && this.modelsCache) {
-      console.info("Zwracanie modeli z cache");
+      // console.info("Zwracanie modeli z cache");
       return this.modelsCache.data;
     }
 
@@ -1073,7 +1068,7 @@ ${trimmedText}`,
         timestamp: Date.now(),
       };
 
-      console.info(`Pobrano ${models.length} modeli z API`);
+      // console.info(`Pobrano ${models.length} modeli z API`);
 
       return models;
     } catch (error) {

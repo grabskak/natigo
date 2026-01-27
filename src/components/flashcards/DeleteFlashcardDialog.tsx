@@ -11,7 +11,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
 interface DeleteFlashcardDialogProps {
   isOpen: boolean;
@@ -20,12 +20,7 @@ interface DeleteFlashcardDialogProps {
   onConfirm: () => Promise<void>;
 }
 
-export default function DeleteFlashcardDialog({
-  isOpen,
-  isDeleting,
-  onClose,
-  onConfirm,
-}: DeleteFlashcardDialogProps) {
+export default function DeleteFlashcardDialog({ isOpen, isDeleting, onClose, onConfirm }: DeleteFlashcardDialogProps) {
   const handleConfirm = async () => {
     await onConfirm();
   };
@@ -36,20 +31,21 @@ export default function DeleteFlashcardDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Usuń fiszkę</AlertDialogTitle>
           <AlertDialogDescription>
-            Czy na pewno chcesz usunąć tę fiszkę? Ta operacja nie może
-            być cofnięta i fiszka zostanie trwale usunięta z Twojej
-            kolekcji.
+            Czy na pewno chcesz usunąć tę fiszkę? Ta operacja nie może być cofnięta i fiszka zostanie trwale usunięta z
+            Twojej kolekcji.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting} data-testid="delete-flashcard-cancel-button">Anuluj</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting} data-testid="delete-flashcard-cancel-button">
+            Anuluj
+          </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             data-testid="delete-flashcard-confirm-button"
           >
-            {isDeleting ? 'Usuwanie...' : 'Usuń'}
+            {isDeleting ? "Usuwanie..." : "Usuń"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

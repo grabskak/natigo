@@ -2,42 +2,33 @@
  * FlashcardsFilterBar - Pasek filtrów ze źródłem, sortowaniem i kolejnością
  */
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import type { FlashcardsFilters, FlashcardSource } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { FlashcardsFilters, FlashcardSource } from "@/types";
 
 interface FlashcardsFilterBarProps {
   filters: FlashcardsFilters;
   onFilterChange: (filters: FlashcardsFilters) => void;
 }
 
-export default function FlashcardsFilterBar({
-  filters,
-  onFilterChange,
-}: FlashcardsFilterBarProps) {
+export default function FlashcardsFilterBar({ filters, onFilterChange }: FlashcardsFilterBarProps) {
   const handleSourceChange = (value: string) => {
     onFilterChange({
       ...filters,
-      source: value as 'all' | FlashcardSource,
+      source: value as "all" | FlashcardSource,
     });
   };
 
   const handleSortChange = (value: string) => {
     onFilterChange({
       ...filters,
-      sort: value as 'created_at' | 'updated_at',
+      sort: value as "created_at" | "updated_at",
     });
   };
 
   const handleOrderChange = (value: string) => {
     onFilterChange({
       ...filters,
-      order: value as 'asc' | 'desc',
+      order: value as "asc" | "desc",
     });
   };
 

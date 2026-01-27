@@ -1,5 +1,11 @@
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { CreateFlashcardsResponse, FlashcardDto, FlashcardInsert, ValidationErrorDetail, PaginatedFlashcardsResponse } from "../../types";
+import type {
+  CreateFlashcardsResponse,
+  FlashcardDto,
+  FlashcardInsert,
+  ValidationErrorDetail,
+  PaginatedFlashcardsResponse,
+} from "../../types";
 import type { CreateFlashcardInput, ListFlashcardsQueryInput } from "../schemas/flashcard.schema";
 import { ValidationError, ForbiddenError } from "../errors/flashcard.errors";
 
@@ -159,7 +165,7 @@ export async function processFlashcardCreation(
 
   // Step 2: Extract unique generation IDs that need verification
   const uniqueGenerationIds = Array.from(
-    new Set(flashcards.filter((f) => f.generation_id).map((f) => f.generation_id!))
+    new Set(flashcards.filter((f) => f.generation_id).map((f) => f.generation_id as string))
   );
 
   // Step 3: Verify generation ownership (single query for all IDs)
@@ -221,7 +227,7 @@ export async function listFlashcards(
   const { data, error, count } = await queryBuilder;
 
   if (error) {
-    console.error("Failed to fetch flashcards:", error);
+    // console.error("Failed to fetch flashcards:", error);
     throw new Error("Failed to fetch flashcards");
   }
 
@@ -286,7 +292,7 @@ export async function updateFlashcard(
     .single();
 
   if (updateError || !updatedFlashcard) {
-    console.error("Failed to update flashcard:", updateError);
+    // console.error("Failed to update flashcard:", updateError);
     throw new Error("Failed to update flashcard");
   }
 
@@ -316,11 +322,7 @@ export async function updateFlashcard(
  * @example
  * await deleteFlashcard(supabase, userId, flashcardId);
  */
-export async function deleteFlashcard(
-  supabase: SupabaseClient,
-  userId: string,
-  flashcardId: string
-): Promise<void> {
+export async function deleteFlashcard(supabase: SupabaseClient, userId: string, flashcardId: string): Promise<void> {
   // Step 1: Verify flashcard exists and belongs to user
   const { data: existingFlashcard, error: fetchError } = await supabase
     .from("flashcards")
@@ -334,13 +336,10 @@ export async function deleteFlashcard(
   }
 
   // Step 2: Delete flashcard from database
-  const { error: deleteError } = await supabase
-    .from("flashcards")
-    .delete()
-    .eq("id", flashcardId);
+  const { error: deleteError } = await supabase.from("flashcards").delete().eq("id", flashcardId);
 
   if (deleteError) {
-    console.error("Failed to delete flashcard:", deleteError);
+    //  console.error("Failed to delete flashcard:", deleteError);
     throw new Error("Failed to delete flashcard");
   }
 }

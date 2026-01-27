@@ -10,4 +10,3 @@ export function getSafeNext(next?: string | null): string | undefined {
 export function isSafeNext(next: string): boolean {
   return getSafeNext(next) === next;
 }
-

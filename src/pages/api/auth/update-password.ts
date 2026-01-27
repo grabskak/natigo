@@ -47,9 +47,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "Update password failed");
   }
 
-  return new Response(
-    JSON.stringify({ message: "Password updated." }),
-    { status: 200, headers: { "Content-Type": "application/json" } }
-  );
+  return new Response(JSON.stringify({ message: "Password updated." }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
 };
-

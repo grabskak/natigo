@@ -2,9 +2,9 @@
  * FlashcardsList - Grid kontener dla kart fiszek lub empty state
  */
 
-import FlashcardCard from './FlashcardCard';
-import EmptyState from './EmptyState';
-import type { FlashcardDto, EmptyStateVariant } from '@/types';
+import FlashcardCard from "./FlashcardCard";
+import EmptyState from "./EmptyState";
+import type { FlashcardDto, EmptyStateVariant } from "@/types";
 
 interface FlashcardsListProps {
   flashcards: FlashcardDto[];
@@ -22,7 +22,7 @@ export default function FlashcardsList({
   flashcards,
   isLoading,
   isEmpty,
-  emptyVariant = 'total-empty',
+  emptyVariant = "total-empty",
   onEdit,
   onDelete,
   onGenerateClick,
@@ -34,10 +34,7 @@ export default function FlashcardsList({
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {[...Array(4)].map((_, index) => (
-          <div
-            key={index}
-            className="h-48 bg-muted animate-pulse rounded-lg"
-          />
+          <div key={index} className="h-48 bg-muted animate-pulse rounded-lg" />
         ))}
       </div>
     );
@@ -59,12 +56,7 @@ export default function FlashcardsList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       {flashcards.map((flashcard) => (
-        <FlashcardCard
-          key={flashcard.id}
-          flashcard={flashcard}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
+        <FlashcardCard key={flashcard.id} flashcard={flashcard} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );

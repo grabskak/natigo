@@ -7,26 +7,18 @@ export default defineConfig({
   test: {
     // Configure jsdom for DOM testing
     environment: "jsdom",
-    
+
     // Setup files
     setupFiles: ["./src/test/setup.ts"],
-    
+
     // Global test settings
     globals: true,
-    
+
     // Coverage configuration
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
-      exclude: [
-        "node_modules/",
-        "dist/",
-        "src/test/",
-        "**/*.d.ts",
-        "**/*.config.*",
-        "**/mockData",
-        "**/__mocks__",
-      ],
+      exclude: ["node_modules/", "dist/", "src/test/", "**/*.d.ts", "**/*.config.*", "**/mockData", "**/__mocks__"],
       // Optional: Set coverage thresholds
       // thresholds: {
       //   lines: 80,
@@ -35,19 +27,14 @@ export default defineConfig({
       //   statements: 80,
       // },
     },
-    
+
     // Test file patterns
     include: ["**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
-    
+
     // Exclude patterns
-    exclude: [
-      "node_modules",
-      "dist",
-      ".astro",
-      "e2e",
-    ],
+    exclude: ["node_modules", "dist", ".astro", "e2e"],
   },
-  
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

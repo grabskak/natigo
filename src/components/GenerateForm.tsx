@@ -21,11 +21,7 @@ const MAX_CHARS = 10000;
  * Form component for entering text to generate flashcards from
  * Includes textarea, character counter, and validation
  */
-export function GenerateForm({
-  onGenerate,
-  isLoading,
-  className,
-}: GenerateFormProps) {
+export function GenerateForm({ onGenerate, isLoading, className }: GenerateFormProps) {
   const [text, setText] = useState("");
   const [validation, setValidation] = useState<ValidationState>({
     isValid: false,
@@ -109,38 +105,23 @@ export function GenerateForm({
   const trimmedLength = text.trim().length;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={cn("space-y-4", className)}
-      noValidate
-      data-testid="generate-form"
-    >
+    <form onSubmit={handleSubmit} className={cn("space-y-4", className)} noValidate data-testid="generate-form">
       {/* Instructions */}
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-        <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-          Instrukcja
-        </h3>
+        <h3 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Instrukcja</h3>
         <p className="text-sm text-blue-700 dark:text-blue-300">
-          Wklej swój tekst poniżej (od {MIN_CHARS.toLocaleString()} do{" "}
-          {MAX_CHARS.toLocaleString()} znaków). Nasze AI przeanalizuje go i
-          wygeneruje fiszki do przejrzenia.
+          Wklej swój tekst poniżej (od {MIN_CHARS.toLocaleString()} do {MAX_CHARS.toLocaleString()} znaków). Nasze AI
+          przeanalizuje go i wygeneruje fiszki do przejrzenia.
         </p>
       </div>
 
       {/* Textarea Field */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <label
-            htmlFor="input-text"
-            className="text-sm font-medium text-gray-700 dark:text-gray-300"
-          >
+          <label htmlFor="input-text" className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Twój tekst
           </label>
-          <CharacterCounter
-            current={trimmedLength}
-            max={MAX_CHARS}
-            min={MIN_CHARS}
-          />
+          <CharacterCounter current={trimmedLength} max={MAX_CHARS} min={MIN_CHARS} />
         </div>
 
         <Textarea
@@ -149,7 +130,6 @@ export function GenerateForm({
           onChange={handleChange}
           placeholder="Wklej tutaj swój tekst..."
           rows={18}
-          autoFocus
           disabled={isLoading}
           className={cn(
             "resize-none font-mono text-sm",
@@ -195,9 +175,7 @@ export function GenerateForm({
         </Button>
 
         {isLoading && (
-          <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
-            To może potrwać do 60 sekund...
-          </span>
+          <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">To może potrwać do 60 sekund...</span>
         )}
       </div>
     </form>

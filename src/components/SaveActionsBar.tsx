@@ -18,13 +18,7 @@ interface SaveActionsBarProps {
  * Sticky bottom action bar for saving accepted flashcards
  * Displays count and provides save/cancel actions
  */
-export function SaveActionsBar({
-  acceptedCount,
-  onSave,
-  onCancel,
-  isSaving,
-  className,
-}: SaveActionsBarProps) {
+export function SaveActionsBar({ acceptedCount, onSave, onCancel, isSaving, className }: SaveActionsBarProps) {
   const canSave = acceptedCount > 0 && !isSaving;
 
   return (
@@ -46,8 +40,12 @@ export function SaveActionsBar({
               <>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100" data-testid="save-actions-counter">
-                    {acceptedCount} {acceptedCount === 1 ? "fiszka" : acceptedCount < 5 ? "fiszki" : "fiszek"} gotowa do zapisu
+                  <span
+                    className="text-sm font-medium text-gray-900 dark:text-gray-100"
+                    data-testid="save-actions-counter"
+                  >
+                    {acceptedCount} {acceptedCount === 1 ? "fiszka" : acceptedCount < 5 ? "fiszki" : "fiszek"} gotowa do
+                    zapisu
                   </span>
                 </div>
               </>
@@ -60,12 +58,7 @@ export function SaveActionsBar({
 
           {/* Right: Actions */}
           <div className="flex items-center gap-3">
-            <Button
-              onClick={onCancel}
-              variant="outline"
-              disabled={isSaving}
-              data-testid="save-actions-cancel-button"
-            >
+            <Button onClick={onCancel} variant="outline" disabled={isSaving} data-testid="save-actions-cancel-button">
               Anuluj
             </Button>
             <Button

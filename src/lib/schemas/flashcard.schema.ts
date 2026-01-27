@@ -44,16 +44,24 @@ export type CreateFlashcardsRequestInput = z.infer<typeof CreateFlashcardsReques
  * Used for GET /api/flashcards
  */
 export const ListFlashcardsQuerySchema = z.object({
-  page: z.string().optional().transform((val) => (val ? parseInt(val, 10) : 1)).pipe(z.number().int().min(1, "Page must be at least 1")),
-  
-  limit: z.string().optional().transform((val) => (val ? parseInt(val, 10) : 20)).pipe(z.number().int().min(1, "Limit must be at least 1").max(100, "Limit cannot exceed 100")),
-  
+  page: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val, 10) : 1))
+    .pipe(z.number().int().min(1, "Page must be at least 1")),
+
+  limit: z
+    .string()
+    .optional()
+    .transform((val) => (val ? parseInt(val, 10) : 20))
+    .pipe(z.number().int().min(1, "Limit must be at least 1").max(100, "Limit cannot exceed 100")),
+
   sort: z.enum(["created_at", "updated_at"]).optional().default("created_at"),
-  
+
   order: z.enum(["asc", "desc"]).optional().default("desc"),
-  
+
   source: FlashcardSourceEnum.optional(),
-  
+
   generation_id: z.string().uuid().optional(),
 });
 
