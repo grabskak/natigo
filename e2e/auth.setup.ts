@@ -30,12 +30,14 @@ setup("authenticate", async ({ page }) => {
     );
   }
 
+  // eslint-disable-next-line no-console
   console.log(`[AUTH SETUP] Attempting login with email: ${email}`);
 
   // Navigate to login page
   await page.goto("/login");
   await page.waitForLoadState("networkidle");
 
+  // eslint-disable-next-line no-console
   console.log("[AUTH SETUP] Login page loaded");
 
   // Fill in login form using test IDs
@@ -49,6 +51,7 @@ setup("authenticate", async ({ page }) => {
   await passwordInput.waitFor({ state: "visible" });
   await passwordInput.fill(password);
 
+  // eslint-disable-next-line no-console
   console.log("[AUTH SETUP] Credentials filled, submitting form");
 
   // Submit form and wait for navigation
@@ -75,6 +78,7 @@ setup("authenticate", async ({ page }) => {
   // Wait for successful redirect to flashcards page
   await page.waitForURL("/flashcards", { timeout: 10000 });
 
+  // eslint-disable-next-line no-console
   console.log("[AUTH SETUP] Redirected to flashcards");
 
   // Verify we're actually logged in by checking for authenticated content

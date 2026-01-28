@@ -68,7 +68,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    console.error("Register error:", error);
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "Registration failed");
   }
 
@@ -89,8 +88,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // (This also prevents redirect loops caused by middleware treating the user as logged-in.)
     try {
       await supabase.auth.signOut();
-    } catch (signOutError) {
-      console.error("Register: failed to sign out unconfirmed session:", signOutError);
+    } catch {
+      // Silently fail - not critical if signOut fails for unconfirmed session
     }
   }
 
