@@ -37,7 +37,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   if (error) {
     // Intentionally do not return error details (non-disclosure).
-    console.error("Reset password error:", error);
+    // Error is silently ignored for security reasons
   }
 
   return new Response(

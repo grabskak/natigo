@@ -67,7 +67,6 @@ export async function verifyGenerationOwnership(
   const { data, error } = await supabase.from("generations").select("id").in("id", generationIds).eq("user_id", userId);
 
   if (error) {
-    console.error("Failed to verify generation ownership:", error);
     throw new Error("Failed to verify generation ownership");
   }
 
@@ -113,7 +112,6 @@ export async function createFlashcards(
   const { data, error } = await supabase.from("flashcards").insert(insertData).select();
 
   if (error || !data) {
-    console.error("Failed to insert flashcards:", error);
     throw new Error("Failed to create flashcards");
   }
 

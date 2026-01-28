@@ -43,7 +43,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    console.error("Update password error:", error);
     return errorResponse(500, "INTERNAL_SERVER_ERROR", "Update password failed");
   }
 
